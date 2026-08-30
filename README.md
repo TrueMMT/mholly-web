@@ -1,10 +1,6 @@
-# M.HOLLY Web — Render Ready
-
-Render settings:
-- Type: Static Site
+# M.HOLLY v3
+Render Static Site settings:
 - Branch: main
-- Root Directory: leave blank
-- Build Command: leave blank
+- Root Directory: blank
+- Build Command: blank
 - Publish Directory: public
-
-Upload the CONTENTS of this ZIP to the root of the GitHub repository.

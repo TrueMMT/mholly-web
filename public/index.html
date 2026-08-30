@@ -1,110 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="M.HOLLY — modern web design and front-end development for businesses, brands and projects.">
-  <title>M.HOLLY — Web Design & Development</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="M.HOLLY — modern responsive websites, landing pages and front-end development.">
+  <title>M.HOLLY | Web Design & Development</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="noise"></div>
-  <div class="cursor-glow" id="cursorGlow"></div>
+  <div class="bg-grid"></div>
+  <div class="glow glow-a"></div>
+  <div class="glow glow-b"></div>
 
   <header class="site-header">
-    <a class="brand" href="#home"><span class="brand-mark">MH</span><span class="brand-text">M.HOLLY</span></a>
-    <nav class="desktop-nav"><a href="#services">Services</a><a href="#work">Work</a><a href="#process">Process</a><a href="#about">About</a></nav>
-    <a class="header-cta" href="#contact">Start a project</a>
-    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+    <a class="brand" href="index.html" aria-label="M.HOLLY home">
+      <img src="assets/mholly-logo.png" alt="M.HOLLY logo">
+      <span class="brand-copy">
+        <strong>M.HOLLY</strong>
+        <small>WEB DESIGN <i>•</i> DEVELOPMENT</small>
+      </span>
+    </a>
+    <button class="menu-btn" aria-label="Open menu">☰</button>
+    <nav>
+      <a class="active" href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="about.html">About</a>
+      <a href="contact.html" class="nav-cta">Start a project</a>
+    </nav>
   </header>
 
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="#services">Services</a><a href="#work">Work</a><a href="#process">Process</a><a href="#about">About</a><a href="#contact">Start a project</a>
-  </div>
-
-  <main>
-    <section class="hero section" id="home">
-      <div class="hero-grid"></div><div class="hero-orb orb-one"></div><div class="hero-orb orb-two"></div>
-      <div class="eyebrow reveal"><span class="status-dot"></span>Available for selected projects</div>
-      <h1 class="hero-title reveal">Websites that make<br><span class="gradient-text">businesses look serious.</span></h1>
-      <p class="hero-copy reveal">M.HOLLY creates modern, responsive websites with clean structure, strong visual identity, smooth motion and a premium feel on every screen.</p>
-      <div class="hero-actions reveal"><a class="btn btn-primary" href="#work">Explore work <span>↗</span></a><a class="btn btn-secondary" href="#contact">Tell me about your project</a></div>
-      <div class="hero-meta reveal">
-        <div><strong>HTML / CSS / JS</strong><span>Fast, focused front-end</span></div>
-        <div><strong>Responsive by default</strong><span>Desktop, tablet & mobile</span></div>
-        <div><strong>Built for business</strong><span>Clear presentation & conversion</span></div>
+  <main class="hero">
+    <div class="hero-copy reveal">
+      <div class="eyebrow"><span></span> WEB DESIGN & FRONT-END DEVELOPMENT</div>
+      <h1>Modern websites.<br><em>Built to stand out.</em></h1>
+      <p>I create clean, responsive websites for businesses and projects — focused on strong presentation, smooth motion and a professional experience on every screen.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="portfolio.html">View my work <b>↗</b></a>
+        <a class="btn ghost" href="contact.html">Start your project</a>
       </div>
-    </section>
-
-    <section class="marquee"><div class="marquee-track">
-      <span>BUSINESS WEBSITES</span><i>✦</i><span>LANDING PAGES</span><i>✦</i><span>REDESIGNS</span><i>✦</i><span>RESPONSIVE DESIGN</span><i>✦</i><span>FRONT-END DEVELOPMENT</span><i>✦</i><span>ANIMATIONS</span><i>✦</i><span>BUSINESS WEBSITES</span><i>✦</i><span>LANDING PAGES</span><i>✦</i>
-    </div></section>
-
-    <section class="section services" id="services">
-      <div class="section-heading reveal"><div><span class="section-kicker">01 / SERVICES</span><h2>Everything a modern<br>business website needs.</h2></div><p>Clear structure, premium visual direction and a responsive front-end designed to make your company look professional from the first click.</p></div>
-      <div class="service-grid">
-        <article class="service-card reveal"><span class="service-no">01</span><h3>Business Websites</h3><p>Modern presentation websites for companies, local businesses and services.</p><div class="service-tags"><span>Structure</span><span>Responsive</span><span>Modern UI</span></div></article>
-        <article class="service-card reveal"><span class="service-no">02</span><h3>Landing Pages</h3><p>Focused pages built around one offer, one goal and a clear call to action.</p><div class="service-tags"><span>Conversion</span><span>Campaigns</span><span>CTA</span></div></article>
-        <article class="service-card reveal"><span class="service-no">03</span><h3>Website Redesign</h3><p>Outdated websites transformed into cleaner, sharper and more credible experiences.</p><div class="service-tags"><span>Refresh</span><span>UX</span><span>Visual upgrade</span></div></article>
-        <article class="service-card reveal"><span class="service-no">04</span><h3>Front-End Development</h3><p>Custom HTML, CSS and JavaScript with responsive layouts and smooth interactions.</p><div class="service-tags"><span>HTML5</span><span>CSS3</span><span>JavaScript</span></div></article>
+      <div class="techline">
+        <span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Responsive Design</span>
       </div>
-    </section>
+    </div>
 
-    <section class="section work" id="work">
-      <div class="section-heading reveal"><div><span class="section-kicker">02 / SELECTED WORK</span><h2>Three projects.<br>Three different directions.</h2></div><p>A selection of current portfolio work showing different industries, visual styles and website goals.</p></div>
-      <div class="projects">
-        <article class="project-card reveal">
-          <div class="project-topline"><span>Concept Project</span><span>Automotive / Business</span></div>
-          <div class="project-preview"><div class="browser"><div class="browser-bar"><span></span><span></span><span></span><div class="browser-url">kraftwerk-auto-service</div></div><div class="preview-auto"><div class="preview-nav"><b>KRAFTWERK</b><span>LEISTUNGEN &nbsp; PREISE &nbsp; KONTAKT</span></div><div class="preview-copy"><small>AUTOSERVICE • PFORZHEIM</small><strong>PRÄZISION.<br>LEISTUNG.<br>VERTRAUEN.</strong><em>Professioneller Service für Ihr Fahrzeug.</em></div><div class="car-line"></div></div></div></div>
-          <div class="project-info"><div><h3>Kraftwerk Auto Service</h3><p>High-contrast automotive website concept with service presentation, pricing and strong visual identity.</p></div><a class="project-link" href="https://kraftwerk-auto-service.onrender.com" target="_blank" rel="noopener">View live ↗</a></div>
-        </article>
-
-        <article class="project-card reveal">
-          <div class="project-topline"><span>Own Project</span><span>Gaming / Community</span></div>
-          <div class="project-preview"><div class="browser"><div class="browser-bar"><span></span><span></span><span></span><div class="browser-url">true-survival-web</div></div><div class="preview-survival"><div class="preview-nav"><b>TRUE SURVIVAL</b><span>SERVER &nbsp; RULES &nbsp; COMMANDS</span></div><div class="survival-grid"></div><div class="preview-copy"><small>THE ISLE COMMUNITY</small><strong>SURVIVE.<br>EVOLVE.<br>DOMINATE.</strong><em>Low rules. Fair PvP. High AI.</em></div></div></div></div>
-          <div class="project-info"><div><h3>True Survival</h3><p>Gaming community website designed around server information, rules, commands and player experience.</p></div><a class="project-link" href="https://true-survival-web.onrender.com" target="_blank" rel="noopener">View live ↗</a></div>
-        </article>
-
-        <article class="project-card reveal">
-          <div class="project-topline"><span>Concept Project</span><span>Construction / Handwerk</span></div>
-          <div class="project-preview"><div class="browser"><div class="browser-bar"><span></span><span></span><span></span><div class="browser-url">steinwerk-bau</div></div><div class="preview-build"><div class="preview-nav"><b>STEINWERK</b><span>LEISTUNGEN &nbsp; PROJEKTE &nbsp; KONTAKT</span></div><div class="preview-copy"><small>BAU • SANIERUNG • HANDWERK</small><strong>SUBSTANZ.<br>QUALITÄT.<br>ERGEBNIS.</strong><em>Solides Handwerk. Klare Ergebnisse.</em></div><div class="build-blocks"><i></i><i></i><i></i></div></div></div></div>
-          <div class="project-info"><div><h3>Steinwerk Bau</h3><p>Industrial construction concept with a premium dark look, clear hierarchy and strong business positioning.</p></div><a class="project-link" href="#">Project ↗</a></div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section process" id="process">
-      <div class="section-heading reveal"><div><span class="section-kicker">03 / PROCESS</span><h2>Simple process.<br>No unnecessary chaos.</h2></div><p>Every project starts with the goal, not the decoration. We define what the site needs to do, then build the design around it.</p></div>
-      <div class="process-list">
-        <div class="process-item reveal"><span>01</span><h3>Idea & Direction</h3><p>You explain the business, goal and style. We define the structure and visual direction.</p></div>
-        <div class="process-item reveal"><span>02</span><h3>Design & Build</h3><p>The site is designed and developed with responsive layouts, motion and clean code.</p></div>
-        <div class="process-item reveal"><span>03</span><h3>Review & Refine</h3><p>We review the result together and refine the details before launch.</p></div>
-        <div class="process-item reveal"><span>04</span><h3>Launch</h3><p>The finished site goes live and is ready to be shared with customers.</p></div>
-      </div>
-    </section>
-
-    <section class="section about" id="about">
-      <div class="about-panel reveal"><div class="about-label">M.HOLLY / WEB DEVELOPMENT</div><h2>Not another generic template.<br><span>Each site gets its own identity.</span></h2><p>M.HOLLY focuses on modern business websites, landing pages and redesigns built with HTML, CSS and JavaScript. The goal is straightforward: create a site that looks current, works smoothly and presents the project professionally.</p><div class="about-stats"><div><strong>100%</strong><span>Responsive layouts</span></div><div><strong>3</strong><span>Current portfolio projects</span></div><div><strong>1</strong><span>Clear point of contact</span></div></div></div>
-    </section>
-
-    <section class="section contact" id="contact">
-      <div class="contact-wrap reveal">
-        <div class="contact-copy"><span class="section-kicker">04 / START A PROJECT</span><h2>Have a website idea?<br><span>Let’s make it real.</span></h2><p>Tell me what you need, what your business does and what kind of website you have in mind. I’ll get back to you with the next step.</p><a class="mail-link" href="mailto:mholly.web@gmail.com">mholly.web@gmail.com ↗</a></div>
-        <form class="contact-form" action="mailto:mholly.web@gmail.com" method="post" enctype="text/plain">
-          <label><span>Your name</span><input type="text" name="name" placeholder="John Smith" required></label>
-          <label><span>Email</span><input type="email" name="email" placeholder="john@company.com" required></label>
-          <label><span>What do you need?</span><select name="project"><option>Business website</option><option>Landing page</option><option>Website redesign</option><option>Front-end development</option><option>Other</option></select></label>
-          <label><span>Tell me about the project</span><textarea name="message" rows="5" placeholder="What should the website do?"></textarea></label>
-          <button class="btn btn-primary form-submit" type="submit">Send project request <span>↗</span></button><small>This form opens your email app. No data is stored on this website.</small>
-        </form>
-      </div>
-    </section>
+    <div class="hero-mark reveal">
+      <div class="logo-orbit"></div>
+      <img src="assets/mholly-logo.png" alt="M.HOLLY">
+      <div class="mark-label">M.HOLLY <span>/ 2026</span></div>
+    </div>
   </main>
 
-  <footer><div class="footer-brand"><span class="brand-mark">MH</span><div><strong>M.HOLLY</strong><span>WEB DESIGN & DEVELOPMENT</span></div></div><div class="footer-links"><a href="#work">Work</a><a href="#services">Services</a><a href="#contact">Contact</a></div><span class="footer-copy">© <span id="year"></span> M.HOLLY</span></footer>
+  <section class="home-strip">
+    <a href="services.html"><span>01</span><strong>Services</strong><small>What I can build →</small></a>
+    <a href="portfolio.html"><span>02</span><strong>Selected Work</strong><small>Explore projects →</small></a>
+    <a href="about.html"><span>03</span><strong>About M.HOLLY</strong><small>My approach →</small></a>
+    <a href="contact.html"><span>04</span><strong>Have an idea?</strong><small>Let's talk →</small></a>
+  </section>
+
+  <footer><span>© 2026 M.HOLLY</span><span>WEB DESIGN • FRONT-END DEVELOPMENT</span></footer>
   <script src="script.js"></script>
 </body>
 </html>

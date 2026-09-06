@@ -473,3 +473,17 @@ body::before{content:"";position:fixed;inset:-35%;z-index:0;pointer-events:none;
   .site-header nav .nav-services .services-menu{display:none!important;position:static!important;width:100%!important;transform:none!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important}
   .site-header nav .nav-services.is-open .services-menu{display:block!important}
 }
+
+
+/* v5.5 — native submenu navigation. No JS is allowed to intercept these links. */
+.site-header .services-menu > a{
+  position:relative!important;
+  z-index:2147483000!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  text-decoration:none!important;
+}
+.site-header .services-menu > a > *{pointer-events:none!important}
+@media (min-width:981px){
+  .site-header nav .nav-services.is-open .services-menu{display:block!important;pointer-events:auto!important}
+}

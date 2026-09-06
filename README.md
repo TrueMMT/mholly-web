@@ -9,3 +9,6 @@ M.HOLLY V6.7
 - max attachment size 10 MB
 
 Deploy as the original Render Static Site (publish directory: public).
+
+
+V6.9: Cleaner FormSubmit email fields, box template, dynamic customer CC copy, removed duplicate attachment-name row. Note: FormSubmit controls sender branding and template colors.

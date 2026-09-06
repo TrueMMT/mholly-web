@@ -52,8 +52,11 @@ if(form && modal && confirmBtn){
     pendingOrderId=makeOrderId();
     const orderField=document.querySelector('#order-id-field');
     const subject=document.querySelector('#form-subject');
+    const customerCopy=document.querySelector('#customer-copy-email');
+    const customerEmail=document.querySelector('#email')?.value?.trim() || '';
     if(orderField) orderField.value=pendingOrderId;
-    if(subject) subject.value=`Neue Bestellung M.HOLLY – ${pendingOrderId}`;
+    if(subject) subject.value=`M.HOLLY Projektanfrage – ${pendingOrderId}`;
+    if(customerCopy) customerCopy.value=customerEmail;
   };
   const finishSuccess=()=>{
     if(!waitingForSubmit) return;
@@ -90,7 +93,6 @@ if(form && modal && confirmBtn){
     const ruleCheck=document.querySelector('#rules-confirm');
     if(!ruleCheck?.checked){ruleCheck?.focus();return}
     const file=document.querySelector('#attachment')?.files?.[0];
-    const attachmentName=document.querySelector('#attachment-name'); if(attachmentName) attachmentName.value=file?.name || '';
     if(file && file.size>10*1024*1024){
       modal.classList.remove('open'); document.body.style.overflow='';
       showStatus('error','Datei zu groß','Bitte wähle eine Datei mit maximal 10 MB.');

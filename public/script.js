@@ -52,35 +52,42 @@ if(form && modal && confirmBtn){
   });
 }
 
-// Desktop navigation: keep the Services dropdown open after click so its links are actually clickable.
-const navServices=document.querySelector('.nav-services');
-if(navServices){
-  const navServicesTrigger=navServices.querySelector(':scope > a');
-  const servicesMenu=navServices.querySelector('.services-menu');
-  if(navServicesTrigger && servicesMenu){
-    navServicesTrigger.setAttribute('aria-haspopup','true');
-    navServicesTrigger.setAttribute('aria-expanded','false');
-    navServicesTrigger.addEventListener('click',e=>{
-      if(window.matchMedia('(min-width:981px)').matches){
-        e.preventDefault();
-        const willOpen=!navServices.classList.contains('open');
-        navServices.classList.toggle('open',willOpen);
-        navServicesTrigger.setAttribute('aria-expanded',String(willOpen));
-      }
+\n// Services dropdown — click-safe on desktop and mobile.
+document.querySelectorAll('.nav-services').forEach(navServices=>{
+  const trigger=navServices.querySelector('.services-trigger');
+  const menu=navServices.querySelector('.services-menu');
+  if(!trigger || !menu) return;
+
+  const setOpen=(open)=>{
+    navServices.classList.toggle('open',open);
+    trigger.setAttribute('aria-expanded',String(open));
+  };
+
+  trigger.addEventListener('click',e=>{
+    e.preventDefault();
+    e.stopPropagation();
+    setOpen(!navServices.classList.contains('open'));
+  });
+
+  // Clicking a real submenu link must navigate normally.
+  menu.querySelectorAll('a').forEach(link=>{
+    link.addEventListener('click',e=>{
+      e.stopPropagation();
     });
-    servicesMenu.addEventListener('click',e=>e.stopPropagation());
-    document.addEventListener('click',e=>{
-      if(!navServices.contains(e.target)){
-        navServices.classList.remove('open');
-        navServicesTrigger.setAttribute('aria-expanded','false');
-      }
-    });
-    document.addEventListener('keydown',e=>{
-      if(e.key==='Escape'){
-        navServices.classList.remove('open');
-        navServicesTrigger.setAttribute('aria-expanded','false');
-        navServicesTrigger.focus();
-      }
-    });
-  }
-}
+  });
+
+  // Keep it open while pointer moves from trigger into the menu.
+  navServices.addEventListener('mouseenter',()=>{
+    if(window.matchMedia('(min-width:981px)').matches) setOpen(true);
+  });
+  navServices.addEventListener('mouseleave',()=>{
+    if(window.matchMedia('(min-width:981px)').matches) setOpen(false);
+  });
+
+  document.addEventListener('click',e=>{
+    if(!navServices.contains(e.target)) setOpen(false);
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape') setOpen(false);
+  });
+});

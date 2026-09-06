@@ -148,3 +148,19 @@ body::before{content:"";position:fixed;inset:-35%;z-index:0;pointer-events:none;
   .services-menu{top:calc(100% - 10px)!important}
   .services-menu::before{top:-24px!important;height:28px!important}
 }
+\n\n/* v4.7 — robust dropdown: button trigger + zero hover gap */
+.services-trigger{appearance:none;border:0;background:transparent;font:inherit;color:#aaaab2;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:7px;padding:31px 0;position:relative;letter-spacing:.15px}
+.nav-services:hover .services-trigger,.nav-services.active .services-trigger,.nav-services.open .services-trigger{color:#fff}
+.nav-services.active .services-trigger::after{content:"";position:absolute;left:0;right:0;bottom:20px;height:2px;background:linear-gradient(90deg,var(--red),var(--red2))}
+@media(min-width:981px){
+  .nav-services{position:relative;align-self:stretch;display:flex;align-items:center}
+  .services-menu{top:100%!important;margin-top:0!important;transform:translate(-50%,0)!important}
+  .services-menu::before{display:none!important}
+  .nav-services.open .services-menu,.nav-services:hover .services-menu,.nav-services:focus-within .services-menu{opacity:1!important;visibility:visible!important;pointer-events:auto!important;transform:translate(-50%,0)!important}
+  .nav-services.open .chev,.nav-services:hover .chev{transform:rotate(180deg)}
+}
+@media(max-width:980px){
+  .services-trigger{width:100%;justify-content:space-between;padding:12px!important;color:#aaaab2}
+  .nav-services .services-menu{display:none!important;position:static!important;width:100%!important;opacity:1!important;visibility:visible!important;transform:none!important;pointer-events:auto!important}
+  .nav-services.open .services-menu{display:block!important}
+}

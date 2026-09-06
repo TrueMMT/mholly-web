@@ -1,33 +1,39 @@
-// Services dropdown: click opens it, submenu links navigate normally, outside click closes it.
-document.querySelectorAll('.nav-services').forEach(menu=>{
-  const trigger=menu.querySelector('.services-trigger');
-  if(!trigger) return;
-  trigger.addEventListener('click',e=>{
-    e.preventDefault();
-    e.stopPropagation();
-    const open=!menu.classList.contains('is-open');
-    document.querySelectorAll('.nav-services.is-open').forEach(other=>{if(other!==menu){other.classList.remove('is-open');other.querySelector('.services-trigger')?.setAttribute('aria-expanded','false')}});
-    menu.classList.toggle('is-open',open);
-    trigger.setAttribute('aria-expanded',open?'true':'false');
+// Services dropdown — click to open, click submenu to navigate reliably.
+(function(){
+  const menus=[...document.querySelectorAll('.nav-services')];
+  const closeAll=(except=null)=>menus.forEach(m=>{
+    if(m!==except){m.classList.remove('is-open');m.querySelector('.services-trigger')?.setAttribute('aria-expanded','false');}
   });
-  menu.querySelectorAll('.services-menu a').forEach(link=>{
-    link.addEventListener('click',e=>{
-      // Do not prevent default: this must remain a real browser navigation.
+
+  menus.forEach(menu=>{
+    const trigger=menu.querySelector('.services-trigger');
+    if(!trigger) return;
+
+    trigger.addEventListener('click', function(e){
+      e.preventDefault();
       e.stopPropagation();
-      menu.classList.remove('is-open');
-      trigger.setAttribute('aria-expanded','false');
+      const next=!menu.classList.contains('is-open');
+      closeAll(menu);
+      menu.classList.toggle('is-open',next);
+      trigger.setAttribute('aria-expanded', next ? 'true' : 'false');
+    });
+
+    menu.querySelectorAll('.services-menu a[data-nav-target]').forEach(link=>{
+      link.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        const target=this.getAttribute('data-nav-target') || this.getAttribute('href');
+        menu.classList.remove('is-open');
+        trigger.setAttribute('aria-expanded','false');
+        // Explicit browser navigation avoids any stale dropdown handler intercepting the link.
+        window.location.href=target;
+      });
     });
   });
-});
-document.addEventListener('click',e=>{
-  document.querySelectorAll('.nav-services.is-open').forEach(menu=>{
-    if(!menu.contains(e.target)){
-      menu.classList.remove('is-open');
-      menu.querySelector('.services-trigger')?.setAttribute('aria-expanded','false');
-    }
-  });
-});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.nav-services.is-open').forEach(menu=>{menu.classList.remove('is-open');menu.querySelector('.services-trigger')?.setAttribute('aria-expanded','false')})});
+
+  document.addEventListener('click', ()=>closeAll());
+  document.addEventListener('keydown', e=>{if(e.key==='Escape') closeAll();});
+})();
 
 document.querySelectorAll('.menu-btn').forEach(btn=>btn.addEventListener('click',()=>document.querySelector('.site-header nav')?.classList.toggle('open')));
 

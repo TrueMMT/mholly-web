@@ -553,3 +553,109 @@ body::before{content:"";position:fixed;inset:-35%;z-index:0;pointer-events:none;
 .form-status.success strong{color:#9dffbc}
 .form-status.error{border-color:rgba(255,70,70,.5);box-shadow:0 18px 45px rgba(0,0,0,.32),0 0 28px rgba(255,40,40,.08)}
 .form-status.error strong{color:#ff8b8b}
+
+
+/* v6.1 — Commerce / E-Commerce package */
+@media(min-width:981px){.packages-page .pricing-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pricing-vivid .price-card.tier-commerce{border-color:#35d9ff!important;background:linear-gradient(155deg,#101013,#09090b 58%,#070709)!important;box-shadow:0 0 0 1px rgba(53,217,255,.08),0 0 34px rgba(53,217,255,.20),0 30px 86px rgba(0,0,0,.44)!important}
+.pricing-vivid .price-card.tier-commerce::after{background:radial-gradient(circle at 10% 0,rgba(53,217,255,.09),transparent 35%)!important;box-shadow:inset 0 0 38px rgba(53,217,255,.05)!important}
+.pricing-vivid .tier-commerce .price-kicker,.pricing-vivid .tier-commerce li::before{color:#64e4ff!important}
+.pricing-vivid .tier-commerce .btn.ghost{border-color:rgba(53,217,255,.65)!important;background:#0e0e10!important}
+.pricing-vivid .tier-commerce .btn.ghost:hover{border-color:#35d9ff!important;box-shadow:0 0 24px rgba(53,217,255,.18)!important}
+.commerce-extra{margin:18px 0 22px;padding:14px;border:1px solid rgba(53,217,255,.38);background:rgba(53,217,255,.035);border-radius:13px;font-size:11px;color:#a9c9d0;line-height:1.5}.commerce-extra b{color:#64e4ff}
+.commerce-service{border-color:rgba(53,217,255,.28)}
+@media(max-width:980px){.packages-page .pricing-grid{grid-template-columns:1fr 1fr}.pricing-grid .price-card:last-child{grid-column:auto}}
+@media(max-width:620px){.packages-page .pricing-grid{grid-template-columns:1fr}}
+
+/* v6.3 — mobile rebuild: cleaner spacing, no overlaps, readable hero/cards/forms */
+@media (max-width: 720px){
+  html,body{max-width:100%;overflow-x:hidden}
+  body{font-size:15px}
+  .site-header{width:calc(100% - 20px)!important;min-height:68px!important;margin-top:10px!important;padding:8px 10px!important;border-radius:16px!important}
+  .brand{gap:9px!important;min-width:0!important}
+  .brand img{width:44px!important;height:44px!important}
+  .brand-copy strong{font-size:15px!important;letter-spacing:.3px!important}
+  .brand-copy small{display:none!important}
+  .menu-btn{font-size:22px!important;padding:8px!important}
+  .site-header nav{top:74px!important;left:0!important;right:0!important;max-height:calc(100vh - 92px);overflow:auto;padding:12px!important;border-radius:14px!important;gap:4px!important}
+  .site-header nav>a,.mh-services-trigger{min-height:44px!important;padding:11px 12px!important;border-radius:9px!important}
+  .nav-cta{width:100%!important}
+  .mh-services-popover{width:calc(100vw - 28px)!important;max-width:none!important;padding:8px!important;border-radius:14px!important}
+
+  .hero{width:calc(100% - 28px)!important;min-height:auto!important;grid-template-columns:1fr!important;gap:28px!important;padding:56px 0 46px!important;align-items:start!important}
+  .hero-copy{min-width:0!important}
+  .eyebrow{font-size:9px!important;letter-spacing:1.4px!important;line-height:1.45!important;flex-wrap:wrap!important}
+  .hero-badge{display:inline-flex!important;max-width:100%!important;white-space:normal!important;line-height:1.45!important;margin-top:16px!important;padding:7px 9px!important;font-size:8px!important;letter-spacing:1px!important}
+  .hero h1{font-size:clamp(43px,13.2vw,62px)!important;line-height:.98!important;letter-spacing:-2.7px!important;margin:18px 0 20px!important;overflow-wrap:normal!important;word-break:normal!important}
+  .hero h1 br{display:block!important}
+  .hero-outline{font-size:.82em!important;letter-spacing:-1.7px!important;-webkit-text-stroke:.8px rgba(245,244,242,.62)!important}
+  .hero-copy>p{font-size:15px!important;line-height:1.65!important;max-width:100%!important}
+  .hero-actions{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;margin-top:25px!important}
+  .hero-actions .btn{width:100%!important;min-height:48px!important;padding:14px 16px!important}
+  .hero-trust{grid-template-columns:1fr!important;gap:9px!important;margin-top:26px!important;padding-top:16px!important}
+  .hero-trust span{font-size:9px!important;line-height:1.45!important}
+  .hero-mark{min-height:300px!important;margin-top:0!important;overflow:visible!important}
+  .hero-mark img{width:min(250px,75vw)!important}
+  .logo-orbit{width:min(286px,86vw)!important;height:min(286px,86vw)!important}
+  .hero-logo-glow{width:250px!important;height:250px!important;filter:blur(56px)!important}
+
+  .story,.page,.page.wide{width:calc(100% - 28px)!important}
+  .story{grid-template-columns:1fr!important;gap:22px!important;margin-bottom:64px!important;padding-top:54px!important}
+  .story-label h2{font-size:29px!important}
+  .story-copy .lead{font-size:27px!important;line-height:1.18!important;letter-spacing:-1px!important}
+  .story-copy p{font-size:15px!important;line-height:1.68!important}
+  .story-points,.cards,.service-cards,.pricing-grid,.extras-grid,.team-grid,.process-row{grid-template-columns:1fr!important}
+  .story-point,.card,.price-card,.extra-card,.team-value{padding:19px!important}
+
+  .page,.page.wide{padding-top:52px!important}
+  .page-head{margin-bottom:38px!important;max-width:100%!important}
+  .page-head h1,.section-head h2{font-size:clamp(39px,11.5vw,54px)!important;line-height:1!important;letter-spacing:-2.2px!important;margin:16px 0!important}
+  .page-head>p,.section-head p{font-size:15px!important;line-height:1.65!important}
+  .section-head{gap:12px!important;margin-bottom:26px!important}
+
+  .project-card{grid-template-columns:1fr!important;min-height:0!important;border-radius:17px!important}
+  .project-visual{min-height:210px!important;padding:20px!important}
+  .project-visual .mock-title{font-size:36px!important;letter-spacing:-1.5px!important}
+  .project-content{padding:22px!important}
+  .project-content h2{font-size:26px!important}
+  .project-actions{display:grid!important;grid-template-columns:1fr!important}
+  .project-actions .btn,.project-actions .muted-btn{width:100%!important;text-align:center!important}
+
+  .about-grid{grid-template-columns:1fr!important;gap:34px!important}
+  .about-logo img{width:min(250px,72vw)!important}
+  .about-copy h2{font-size:30px!important}
+  .about-copy p{font-size:15px!important;line-height:1.68!important}
+
+  .packages-page .pricing-grid{grid-template-columns:1fr!important;gap:14px!important}
+  .pricing-vivid .price-card{min-height:0!important;border-radius:17px!important}
+  .price{font-size:38px!important}
+  .price-card ul{padding-left:0!important}
+  .price-card li{font-size:13px!important;line-height:1.5!important}
+  .extras{padding:18px!important;border-radius:17px!important}
+
+  .form-wrap{grid-template-columns:1fr!important;gap:18px!important}
+  .contact-aside{position:static!important;padding:20px!important;border-radius:17px!important}
+  .contact-aside h2{font-size:27px!important}
+  .project-form{padding:18px!important;border-radius:17px!important}
+  .form-section{padding:0 0 25px!important;margin:0 0 25px!important}
+  .form-grid{grid-template-columns:1fr!important;gap:14px!important}
+  .field.full{grid-column:auto!important}
+  .field input,.field select,.field textarea{font-size:16px!important;min-height:48px!important;padding:12px!important}
+  .field textarea{min-height:120px!important}
+  .checkline{align-items:flex-start!important;gap:10px!important;font-size:12px!important;line-height:1.55!important}
+  .form-submit{flex-direction:column!important;align-items:stretch!important;gap:14px!important}
+  .form-submit .btn{width:100%!important}
+  .modal{padding:10px!important}
+  .modal-card{width:100%!important;max-height:90vh!important;overflow:auto!important;padding:17px!important;border-radius:16px!important}
+  .modal-head h2{font-size:23px!important}
+  .rule{padding:14px!important}
+  footer{width:calc(100% - 28px)!important;margin-top:64px!important;padding:25px 0!important;gap:16px!important;flex-direction:column!important;align-items:flex-start!important}
+}
+
+@media (max-width: 390px){
+  .hero h1{font-size:42px!important;letter-spacing:-2.2px!important}
+  .page-head h1,.section-head h2{font-size:38px!important}
+  .hero-mark{min-height:270px!important}
+  .hero-mark img{width:220px!important}
+  .logo-orbit{width:252px!important;height:252px!important}
+}

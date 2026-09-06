@@ -51,3 +51,54 @@ if(form && modal && confirmBtn){
     form.submit();
   });
 }
+
+
+// v5.8 isolated Services / Website-Pakete menu.
+(() => {
+  const trigger = document.querySelector('.mh-services-trigger');
+  const pop = document.getElementById('mh-services-popover');
+  if (!trigger || !pop) return;
+
+  const position = () => {
+    const r = trigger.getBoundingClientRect();
+    const w = Math.min(330, window.innerWidth - 24);
+    let left = r.left + r.width / 2 - w / 2;
+    left = Math.max(12, Math.min(left, window.innerWidth - w - 12));
+    pop.style.width = w + 'px';
+    pop.style.left = Math.round(left) + 'px';
+    pop.style.top = Math.round(r.bottom + 8) + 'px';
+  };
+  const close = () => {
+    pop.hidden = true;
+    trigger.setAttribute('aria-expanded','false');
+  };
+  const open = () => {
+    position();
+    pop.hidden = false;
+    trigger.setAttribute('aria-expanded','true');
+  };
+
+  trigger.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    pop.hidden ? open() : close();
+  });
+
+  // Explicit navigation fallback. Normal href remains in place too.
+  pop.querySelectorAll('a[href]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const href = link.getAttribute('href');
+      close();
+      window.location.assign(href);
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!pop.hidden && !pop.contains(e.target) && !trigger.contains(e.target)) close();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  window.addEventListener('resize', () => { if (!pop.hidden) position(); });
+  window.addEventListener('scroll', () => { if (!pop.hidden) position(); }, {passive:true});
+})();

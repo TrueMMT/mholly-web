@@ -498,7 +498,9 @@ body::before{content:"";position:fixed;inset:-35%;z-index:0;pointer-events:none;
   cursor:pointer!important;
 }
 .site-header .services-menu .services-nav-link *{pointer-events:none!important}
-\n\n/* v5.7 — clean checkbox-only dropdown. No JavaScript intercepts submenu links. */
+
+
+/* v5.7 — clean checkbox-only dropdown. No JavaScript intercepts submenu links. */
 .services-toggle{position:absolute!important;opacity:0!important;pointer-events:none!important;width:1px!important;height:1px!important}
 @media (min-width:981px){
   .site-header nav .nav-services{position:relative!important;display:flex!important;align-items:center!important;align-self:stretch!important;overflow:visible!important;width:auto!important}
@@ -517,4 +519,26 @@ body::before{content:"";position:fixed;inset:-35%;z-index:0;pointer-events:none;
   .site-header nav .nav-services .services-menu{display:none!important;position:static!important;width:100%!important;transform:none!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important}
   .site-header nav .nav-services .services-toggle:checked ~ .services-menu{display:block!important}
   .site-header nav .nav-services .services-menu>a{pointer-events:auto!important;cursor:pointer!important}
+}
+
+
+/* v5.8 — isolated services dropdown. Uses unique class names and a fixed popover
+   so legacy navigation CSS cannot cover or intercept its links. */
+.mh-nav-services{display:flex;align-items:center;align-self:stretch;position:relative}
+.mh-services-trigger{appearance:none;border:0;background:transparent;color:#aaaab2;font:inherit;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:7px;padding:0;height:100%;white-space:nowrap}
+.mh-services-trigger:hover,.mh-services-trigger[aria-expanded="true"]{color:#fff}
+.mh-chev{font-size:13px;color:#e4414b;transition:transform .2s ease}
+.mh-services-trigger[aria-expanded="true"] .mh-chev{transform:rotate(180deg)}
+.mh-services-popover{position:fixed;z-index:2147483646;width:330px;padding:10px;border:1px solid #5a4a3b;border-radius:17px;background:#0c0c0f;box-shadow:0 28px 80px rgba(0,0,0,.72),0 0 30px rgba(215,20,33,.10)}
+.mh-services-popover[hidden]{display:none!important}
+.mh-services-popover>a{display:grid;grid-template-columns:28px 1fr auto;gap:11px;align-items:center;min-height:58px;padding:12px 13px;border-radius:11px;text-decoration:none!important;color:inherit;cursor:pointer;position:relative;z-index:1;pointer-events:auto!important}
+.mh-services-popover>a:hover{background:linear-gradient(90deg,#190b0e,#111114);box-shadow:inset 2px 0 #ef2635}
+.mh-services-popover b{font-size:9px;color:#ef3d49;letter-spacing:1px}
+.mh-services-popover strong{font-size:12px;color:#f5f4f2;letter-spacing:.1px}
+.mh-services-popover em{font-style:normal;color:#ef3c48;font-size:14px;transition:transform .2s}
+.mh-services-popover>a:hover em{transform:translateX(3px)}
+@media(max-width:980px){
+  .mh-nav-services{display:block;width:100%}
+  .mh-services-trigger{width:100%;height:auto;justify-content:space-between;padding:12px}
+  .mh-services-popover{position:fixed;width:min(330px,calc(100vw - 24px))}
 }

@@ -30,3 +30,9 @@
 - Dropdown ohne Preis-Unterzeilen
 - kräftigere Paketfarben
 - Zusatzleistungs-Icons und Listen-Ausrichtung korrigiert
+
+
+## v4.5
+- Fixed desktop Leistungen dropdown hover gap so both menu items remain clickable.
+- Package borders changed to neon green, purple and gold while keeping dark interiors.
+- Zusatzleistungen cards use matching neon outline accents and aligned bullets/icons.

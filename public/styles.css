@@ -95,3 +95,41 @@ body::before{content:"";position:fixed;inset:-35%;z-index:0;pointer-events:none;
 .extra-price{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}.extra-price small{white-space:nowrap}
 
 @media(max-width:980px){.services-cta{align-items:flex-start;flex-direction:column}.services-menu>a{grid-template-columns:27px 1fr auto!important}.pricing-vivid .price-card{min-height:auto}}
+
+/* v4.5 — stable services dropdown + neon package outlines */
+@media(min-width:981px){
+  .nav-services{position:relative;display:flex;align-items:stretch}
+  .nav-services>a{height:100%;display:flex;align-items:center}
+  .services-menu{top:calc(100% - 6px);left:50%;transform:translate(-50%,8px);pointer-events:none}
+  .services-menu::before{content:"";position:absolute;left:0;right:0;top:-16px;height:18px;background:transparent}
+  .nav-services:hover .services-menu,.nav-services:focus-within .services-menu{opacity:1;visibility:visible;transform:translate(-50%,0);pointer-events:auto}
+}
+
+/* Keep card interiors dark; use colour mainly on the border/glow */
+.pricing-vivid .price-card.tier-essential,
+.pricing-vivid .price-card.tier-professional,
+.pricing-vivid .price-card.tier-signature{background:linear-gradient(155deg,#101013,#09090b 58%,#070709)!important}
+
+.pricing-vivid .price-card.tier-essential{border-color:#39ff88!important;box-shadow:0 0 0 1px rgba(57,255,136,.08),0 0 28px rgba(57,255,136,.20),0 28px 80px rgba(0,0,0,.42)!important}
+.pricing-vivid .price-card.tier-essential::after{background:radial-gradient(circle at 10% 0,rgba(57,255,136,.08),transparent 34%)!important;box-shadow:inset 0 0 34px rgba(57,255,136,.045)!important}
+.pricing-vivid .tier-essential .price-kicker,.pricing-vivid .tier-essential li::before{color:#56ff9a!important}.pricing-vivid .tier-essential .btn.ghost{border-color:rgba(57,255,136,.62)!important}.pricing-vivid .tier-essential .btn.ghost:hover{border-color:#39ff88!important;box-shadow:0 0 24px rgba(57,255,136,.18)!important}
+
+.pricing-vivid .price-card.tier-professional{border-color:#b65cff!important;box-shadow:0 0 0 1px rgba(182,92,255,.08),0 0 34px rgba(182,92,255,.24),0 30px 86px rgba(0,0,0,.44)!important}
+.pricing-vivid .price-card.tier-professional::after{background:radial-gradient(circle at 10% 0,rgba(182,92,255,.10),transparent 35%)!important;box-shadow:inset 0 0 38px rgba(182,92,255,.05)!important}
+.pricing-vivid .tier-professional .price-kicker,.pricing-vivid .tier-professional li::before{color:#c77bff!important}.pricing-vivid .price-card.featured::before{background:#1a1022!important;color:#d9a8ff!important;border-color:#7d3daf!important}.pricing-vivid .tier-professional .btn.primary{background:linear-gradient(135deg,#8d37d0,#b65cff)!important;box-shadow:0 10px 32px rgba(182,92,255,.22)!important}
+
+.pricing-vivid .price-card.tier-signature{border-color:#ffc642!important;box-shadow:0 0 0 1px rgba(255,198,66,.08),0 0 32px rgba(255,198,66,.22),0 30px 84px rgba(0,0,0,.43)!important}
+.pricing-vivid .price-card.tier-signature::after{background:radial-gradient(circle at 10% 0,rgba(255,198,66,.09),transparent 35%)!important;box-shadow:inset 0 0 36px rgba(255,198,66,.05)!important}
+.pricing-vivid .tier-signature .price-kicker,.pricing-vivid .tier-signature li::before{color:#ffd666!important}.pricing-vivid .tier-signature .btn.ghost{border-color:rgba(255,198,66,.66)!important;background:#0e0e10!important}.pricing-vivid .tier-signature .btn.ghost:hover{border-color:#ffc642!important;box-shadow:0 0 24px rgba(255,198,66,.18)!important}
+.pricing-vivid .tier-signature .premium-extra{border-color:rgba(255,198,66,.42)!important;background:rgba(255,198,66,.035)!important}.pricing-vivid .tier-signature .premium-extra b{color:#ffd666!important}
+
+/* Zusatzleistungen — same dark style with distinct neon outlines */
+.extras-grid .extra-card{background:linear-gradient(155deg,#101013,#09090b)!important}
+.extras-grid .extra-card:nth-child(1){border-color:#39ff88!important;box-shadow:0 0 22px rgba(57,255,136,.11)}
+.extras-grid .extra-card:nth-child(2){border-color:#b65cff!important;box-shadow:0 0 22px rgba(182,92,255,.11)}
+.extras-grid .extra-card:nth-child(3){border-color:#ffc642!important;box-shadow:0 0 22px rgba(255,198,66,.11)}
+.extras-grid .extra-card:nth-child(4){border-color:#38d8ff!important;box-shadow:0 0 22px rgba(56,216,255,.10)}
+.extras-grid .extra-card:nth-child(1) .extra-no,.extras-grid .extra-card:nth-child(1) .extra-price{color:#56ff9a}.extras-grid .extra-card:nth-child(1) .extra-icon{border-color:rgba(57,255,136,.55)}.extras-grid .extra-card:nth-child(1) .extra-icon svg{stroke:#56ff9a}.extras-grid .extra-card:nth-child(1) li::before{background:#39ff88;box-shadow:0 0 9px rgba(57,255,136,.55)}
+.extras-grid .extra-card:nth-child(2) .extra-no,.extras-grid .extra-card:nth-child(2) .extra-price{color:#c77bff}.extras-grid .extra-card:nth-child(2) .extra-icon{border-color:rgba(182,92,255,.55)}.extras-grid .extra-card:nth-child(2) .extra-icon svg{stroke:#c77bff}.extras-grid .extra-card:nth-child(2) li::before{background:#b65cff;box-shadow:0 0 9px rgba(182,92,255,.55)}
+.extras-grid .extra-card:nth-child(3) .extra-no,.extras-grid .extra-card:nth-child(3) .extra-price{color:#ffd666}.extras-grid .extra-card:nth-child(3) .extra-icon{border-color:rgba(255,198,66,.55)}.extras-grid .extra-card:nth-child(3) .extra-icon svg{stroke:#ffd666}.extras-grid .extra-card:nth-child(3) li::before{background:#ffc642;box-shadow:0 0 9px rgba(255,198,66,.55)}
+.extras-grid .extra-card:nth-child(4) .extra-no,.extras-grid .extra-card:nth-child(4) .extra-price{color:#62e3ff}.extras-grid .extra-card:nth-child(4) .extra-icon{border-color:rgba(56,216,255,.55)}.extras-grid .extra-card:nth-child(4) .extra-icon svg{stroke:#62e3ff}.extras-grid .extra-card:nth-child(4) li::before{background:#38d8ff;box-shadow:0 0 9px rgba(56,216,255,.55)}

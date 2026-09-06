@@ -20,79 +20,94 @@ if(packageSelect && params.get('paket')) packageSelect.value=params.get('paket')
 document.querySelectorAll('[data-package]').forEach(a=>a.addEventListener('click',()=>sessionStorage.setItem('mholly-package',a.dataset.package)));
 if(packageSelect && sessionStorage.getItem('mholly-package')){packageSelect.value=sessionStorage.getItem('mholly-package');sessionStorage.removeItem('mholly-package')}
 
-// Projektformular: Validierung -> Regeln -> FormSubmit ohne sichtbare Weiterleitung.
+// Projektformular: Validierung -> Regeln -> klassischer FormSubmit Upload im versteckten Frame.
+// Dadurch bleiben Besucher auf M.HOLLY und echte Dateianhänge werden als multipart/form-data übertragen.
 const form=document.querySelector('#project-form');
 const modal=document.querySelector('#rules-modal');
 const closeModal=document.querySelectorAll('[data-close-modal]');
 const confirmBtn=document.querySelector('#confirm-submit');
 const formStatus=document.querySelector('#form-status');
+const submitFrame=document.querySelector('iframe[name="mholly-submit-frame"]');
 if(form && modal && confirmBtn){
   let pendingOrderId='';
+  let waitingForSubmit=false;
+  let submitTimer=null;
   const resetButton=()=>{confirmBtn.disabled=false;confirmBtn.textContent='Bestätigen & Anfrage senden'};
   const showStatus=(type,title,text)=>{
     if(!formStatus) return;
     formStatus.className=`form-status ${type}`;
     formStatus.innerHTML=`<strong>${title}</strong><span>${text}</span>`;
     formStatus.hidden=false;
+    formStatus.style.display='grid';
     formStatus.scrollIntoView({behavior:'smooth',block:'center'});
   };
   const makeOrderId=()=>{
     const d=new Date();
-    const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const day=String(d.getDate()).padStart(2,'0');
-    const rand=crypto?.getRandomValues ? Array.from(crypto.getRandomValues(new Uint32Array(1)))[0].toString().slice(-5).padStart(5,'0') : Math.floor(10000+Math.random()*90000);
+    const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');
+    let rand;
+    try{rand=Array.from(crypto.getRandomValues(new Uint32Array(1)))[0].toString().slice(-5).padStart(5,'0')}catch{rand=String(Math.floor(10000+Math.random()*90000))}
     return `MH-${y}${m}${day}-${rand}`;
   };
-  const restoreDisabled=[];
   const prepareSubmission=()=>{
     pendingOrderId=makeOrderId();
     const orderField=document.querySelector('#order-id-field');
     const subject=document.querySelector('#form-subject');
-    const auto=document.querySelector('#form-autoresponse');
-    const next=document.querySelector('#form-next');
     if(orderField) orderField.value=pendingOrderId;
     if(subject) subject.value=`Neue Bestellung M.HOLLY – ${pendingOrderId}`;
-    if(auto) auto.value=`Vielen Dank für deine Anfrage bei M.HOLLY. Deine Bestellnummer lautet ${pendingOrderId}. Wir haben deine Angaben erhalten und melden uns per E-Mail. Unten findest du eine Kopie deiner übermittelten Angaben.`;
-    if(next) next.value=`${location.origin}/form-success.html`;
-    // Leere optionale Felder werden für diese Übertragung deaktiviert, damit im Mail nur ausgefüllte Antworten erscheinen.
-    restoreDisabled.length=0;
-    form.querySelectorAll('input:not([type="hidden"]):not([type="checkbox"]), textarea, select').forEach(el=>{
-      if(!el.required && !el.value){ restoreDisabled.push(el); el.disabled=true; }
-    });
   };
-  const restoreFields=()=>{restoreDisabled.forEach(el=>el.disabled=false);restoreDisabled.length=0};
+  const finishSuccess=()=>{
+    if(!waitingForSubmit) return;
+    waitingForSubmit=false;
+    if(submitTimer) clearTimeout(submitTimer);
+    form.reset();
+    document.querySelector('#rules-confirm')?.removeAttribute('checked');
+    const rule=document.querySelector('#rules-confirm'); if(rule) rule.checked=false;
+    const early=document.querySelector('#early-start'); if(early) early.checked=false;
+    showStatus('success','✓ Anfrage erfolgreich gesendet',`Danke! Deine Anfrage wurde gesendet. Deine Bestellnummer ist ${pendingOrderId}.`);
+    resetButton();
+  };
 
   form.addEventListener('submit',e=>{
     e.preventDefault();
     if(!form.reportValidity()) return;
-    if(formStatus) formStatus.hidden=true;
+    if(formStatus){formStatus.hidden=true;formStatus.style.display='none'}
     modal.classList.add('open'); document.body.style.overflow='hidden';
   });
   closeModal.forEach(b=>b.addEventListener('click',()=>{modal.classList.remove('open');document.body.style.overflow=''}));
   modal.addEventListener('click',e=>{if(e.target===modal){modal.classList.remove('open');document.body.style.overflow=''}});
+
+  if(submitFrame){
+    submitFrame.addEventListener('load',()=>{
+      if(!waitingForSubmit) return;
+      try{
+        const href=submitFrame.contentWindow?.location?.href || '';
+        if(href.includes('form-success.html')) finishSuccess();
+      }catch(_){ /* cross-origin FormSubmit page while request is processing */ }
+    });
+  }
+
   confirmBtn.addEventListener('click',()=>{
     const ruleCheck=document.querySelector('#rules-confirm');
     if(!ruleCheck?.checked){ruleCheck?.focus();return}
+    const file=document.querySelector('#attachment')?.files?.[0];
+    const attachmentName=document.querySelector('#attachment-name'); if(attachmentName) attachmentName.value=file?.name || '';
+    if(file && file.size>10*1024*1024){
+      modal.classList.remove('open'); document.body.style.overflow='';
+      showStatus('error','Datei zu groß','Bitte wähle eine Datei mit maximal 10 MB.');
+      return;
+    }
     confirmBtn.disabled=true; confirmBtn.textContent='Wird gesendet …';
     prepareSubmission();
     modal.classList.remove('open'); document.body.style.overflow='';
-    form.submit();
-    // Native iframe-submit: Hauptseite bleibt sichtbar. Erfolg kommt über form-success.html zurück.
-    setTimeout(()=>{
-      if(confirmBtn.disabled){
-        restoreFields(); resetButton();
-        showStatus('error','Übertragung dauert länger','Falls keine Bestätigung erscheint, versuche es bitte erneut. Eine Sicherheitsprüfung von FormSubmit kann die Übertragung verzögern.');
-      }
-    },15000);
-  });
-  window.addEventListener('message',e=>{
-    if(e.origin!==location.origin || e.data?.type!=='mholly-form-success') return;
-    restoreFields();
-    modal.classList.remove('open'); document.body.style.overflow='';
-    showStatus('success','✓ Anfrage erfolgreich gesendet',`Danke! Deine Bestellnummer ist ${pendingOrderId}. Eine Kopie deiner Angaben wurde an deine E-Mail-Adresse gesendet.`);
-    form.reset();
-    const ruleCheck=document.querySelector('#rules-confirm'); if(ruleCheck) ruleCheck.checked=false;
-    const early=document.querySelector('#early-start'); if(early) early.checked=false;
-    resetButton();
+    waitingForSubmit=true;
+    submitTimer=setTimeout(()=>{
+      if(!waitingForSubmit) return;
+      waitingForSubmit=false;
+      showStatus('error','Senden dauert zu lange','Die Anfrage wurde nicht bestätigt. Bitte versuche es erneut oder sende die Anfrage ohne Anhang.');
+      resetButton();
+    },45000);
+    // native submit preserves multipart file uploads and target iframe
+    HTMLFormElement.prototype.submit.call(form);
   });
 }
 

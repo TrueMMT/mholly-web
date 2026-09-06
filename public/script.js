@@ -1,3 +1,34 @@
+// Services dropdown: click opens it, submenu links navigate normally, outside click closes it.
+document.querySelectorAll('.nav-services').forEach(menu=>{
+  const trigger=menu.querySelector('.services-trigger');
+  if(!trigger) return;
+  trigger.addEventListener('click',e=>{
+    e.preventDefault();
+    e.stopPropagation();
+    const open=!menu.classList.contains('is-open');
+    document.querySelectorAll('.nav-services.is-open').forEach(other=>{if(other!==menu){other.classList.remove('is-open');other.querySelector('.services-trigger')?.setAttribute('aria-expanded','false')}});
+    menu.classList.toggle('is-open',open);
+    trigger.setAttribute('aria-expanded',open?'true':'false');
+  });
+  menu.querySelectorAll('.services-menu a').forEach(link=>{
+    link.addEventListener('click',e=>{
+      // Do not prevent default: this must remain a real browser navigation.
+      e.stopPropagation();
+      menu.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded','false');
+    });
+  });
+});
+document.addEventListener('click',e=>{
+  document.querySelectorAll('.nav-services.is-open').forEach(menu=>{
+    if(!menu.contains(e.target)){
+      menu.classList.remove('is-open');
+      menu.querySelector('.services-trigger')?.setAttribute('aria-expanded','false');
+    }
+  });
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.nav-services.is-open').forEach(menu=>{menu.classList.remove('is-open');menu.querySelector('.services-trigger')?.setAttribute('aria-expanded','false')})});
+
 document.querySelectorAll('.menu-btn').forEach(btn=>btn.addEventListener('click',()=>document.querySelector('.site-header nav')?.classList.toggle('open')));
 
 const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.08});

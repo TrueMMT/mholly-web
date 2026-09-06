@@ -1,5 +1,4 @@
-// Services dropdown — the trigger only opens/closes the menu.
-// The two submenu items are normal native <a> links and are never intercepted by JavaScript.
+// Services dropdown — click to open, then the two rows navigate explicitly.
 (function(){
   const menus=[...document.querySelectorAll('.nav-services')];
   const closeAll=(except=null)=>menus.forEach(menu=>{
@@ -11,21 +10,25 @@
 
   menus.forEach(menu=>{
     const trigger=menu.querySelector('.services-trigger');
-    if(!trigger) return;
+    if(trigger){
+      trigger.addEventListener('click', (e)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        const open=!menu.classList.contains('is-open');
+        closeAll(menu);
+        menu.classList.toggle('is-open', open);
+        trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    }
 
-    trigger.addEventListener('click', (e)=>{
-      e.preventDefault();
-      e.stopPropagation();
-      const open=!menu.classList.contains('is-open');
-      closeAll(menu);
-      menu.classList.toggle('is-open', open);
-      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
-    });
-
-    // Important: do not add click handlers to .services-menu a.
-    // Their href is handled directly by the browser.
-    menu.querySelector('.services-menu')?.addEventListener('click', (e)=>{
-      e.stopPropagation();
+    // Explicit navigation: use the target stored on the row.
+    menu.querySelectorAll('.services-nav-link').forEach(link=>{
+      link.addEventListener('click', (e)=>{
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        const target=link.dataset.target || link.getAttribute('href');
+        if(target) window.location.assign(target);
+      }, true);
     });
   });
 

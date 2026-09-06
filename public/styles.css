@@ -487,3 +487,14 @@ body::before{content:"";position:fixed;inset:-35%;z-index:0;pointer-events:none;
 @media (min-width:981px){
   .site-header nav .nav-services.is-open .services-menu{display:block!important;pointer-events:auto!important}
 }
+
+/* v5.6 final dropdown click layer */
+.site-header .services-menu{isolation:isolate!important}
+.site-header .services-menu .services-nav-link{
+  display:grid!important;
+  position:relative!important;
+  z-index:2147483646!important;
+  pointer-events:auto!important;
+  cursor:pointer!important;
+}
+.site-header .services-menu .services-nav-link *{pointer-events:none!important}

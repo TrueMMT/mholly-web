@@ -1,3 +1,6 @@
-# M.HOLLY Web v5.0
+M.HOLLY v5.2 — native services dropdown fix
 
-Fix: desktop Services dropdown is now click-to-open and stays open until a submenu option is selected, the user clicks outside, or presses Escape. Submenu links remain normal page links to services.html and packages.html.
+- Leistungen uses native <details>/<summary> click behavior.
+- Menu stays open after clicking Leistungen.
+- Both submenu entries are normal HTML links and navigate to services.html / packages.html.
+- Removed JavaScript interception from the services dropdown.

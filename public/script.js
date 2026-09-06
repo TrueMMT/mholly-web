@@ -20,26 +20,39 @@ if(packageSelect && params.get('paket')) packageSelect.value=params.get('paket')
 document.querySelectorAll('[data-package]').forEach(a=>a.addEventListener('click',()=>sessionStorage.setItem('mholly-package',a.dataset.package)));
 if(packageSelect && sessionStorage.getItem('mholly-package')){packageSelect.value=sessionStorage.getItem('mholly-package');sessionStorage.removeItem('mholly-package')}
 
-// Projektový formulár: najprv validácia, potom zobrazenie pravidiel, až následne odoslanie.
+// Projektový formulár: validácia -> pravidlá -> AJAX odoslanie bez opustenia webu.
 const form=document.querySelector('#project-form');
 const modal=document.querySelector('#rules-modal');
 const closeModal=document.querySelectorAll('[data-close-modal]');
 const confirmBtn=document.querySelector('#confirm-submit');
+const formStatus=document.querySelector('#form-status');
 if(form && modal && confirmBtn){
   const requestIdField=form.querySelector('[name="Anfrage-ID"]');
   const acceptedAtField=form.querySelector('[name="Zustimmung-Zeitpunkt"]');
   const rulesField=form.querySelector('[name="Bestätigte_Projektregeln"]');
   const startEarlyField=form.querySelector('[name="Vorzeitiger_Leistungsbeginn"]');
+  const replyToField=form.querySelector('[name="_replyto"]');
+  const emailCopyField=form.querySelector('[name="E-Mail-Adresse"]');
+  const emailField=form.querySelector('[name="email"]');
   const generateId=()=>`MH-${new Date().toISOString().slice(0,10).replaceAll('-','')}-${Math.random().toString(36).slice(2,8).toUpperCase()}`;
+  const resetButton=()=>{confirmBtn.disabled=false;confirmBtn.textContent='Bestätigen & Anfrage senden'};
+  const showStatus=(type,title,text)=>{
+    if(!formStatus) return;
+    formStatus.className=`form-status ${type}`;
+    formStatus.innerHTML=`<strong>${title}</strong><span>${text}</span>`;
+    formStatus.hidden=false;
+    formStatus.scrollIntoView({behavior:'smooth',block:'center'});
+  };
   if(requestIdField) requestIdField.value=generateId();
   form.addEventListener('submit',e=>{
     e.preventDefault();
     if(!form.reportValidity()) return;
+    if(formStatus) formStatus.hidden=true;
     modal.classList.add('open'); document.body.style.overflow='hidden';
   });
   closeModal.forEach(b=>b.addEventListener('click',()=>{modal.classList.remove('open');document.body.style.overflow=''}));
   modal.addEventListener('click',e=>{if(e.target===modal){modal.classList.remove('open');document.body.style.overflow=''}});
-  confirmBtn.addEventListener('click',()=>{
+  confirmBtn.addEventListener('click',async()=>{
     const ruleCheck=document.querySelector('#rules-confirm');
     if(!ruleCheck?.checked){ruleCheck?.focus();return}
     const now=new Date();
@@ -47,8 +60,32 @@ if(form && modal && confirmBtn){
     if(rulesField) rulesField.value='JA – Projektablauf, Anzahlung/Abrechnung, Stornierung nach Leistungsbeginn und Datenschutzhinweise im Bestätigungsfenster gelesen und bestätigt.';
     const early=document.querySelector('#early-start');
     if(startEarlyField) startEarlyField.value=early?.checked?'JA – ausdrücklicher Wunsch, vor Ablauf einer ggf. bestehenden Widerrufsfrist mit der Leistung zu beginnen.':'NEIN – kein vorzeitiger Leistungsbeginn angefordert.';
+    if(replyToField && emailField) replyToField.value=emailField.value;
+    if(emailCopyField && emailField) emailCopyField.value=emailField.value;
+
     confirmBtn.disabled=true; confirmBtn.textContent='Wird gesendet …';
-    form.submit();
+    try{
+      const payload=new FormData(form);
+      const response=await fetch('https://formsubmit.co/ajax/mholly.development@gmail.com',{
+        method:'POST',
+        headers:{'Accept':'application/json'},
+        body:payload
+      });
+      let data={};
+      try{data=await response.json()}catch(_){ }
+      if(!response.ok || data.success===false || data.success==='false') throw new Error(data.message||'Formular konnte nicht gesendet werden.');
+
+      modal.classList.remove('open'); document.body.style.overflow='';
+      showStatus('success','✓ Anfrage erfolgreich gesendet','Danke! Deine Projektanfrage wurde an M.HOLLY übermittelt. Du bleibst auf unserer Website. Wir melden uns per E-Mail zurück.');
+      form.reset();
+      if(requestIdField) requestIdField.value=generateId();
+      document.querySelector('#rules-confirm').checked=false;
+      if(early) early.checked=false;
+    }catch(err){
+      modal.classList.remove('open'); document.body.style.overflow='';
+      showStatus('error','Anfrage konnte nicht gesendet werden','Bitte versuche es erneut. Falls das Problem bleibt, schreibe direkt an mholly.development@gmail.com.');
+      console.error('M.HOLLY form error:',err);
+    }finally{resetButton()}
   });
 }
 

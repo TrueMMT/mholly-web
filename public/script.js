@@ -51,3 +51,36 @@ if(form && modal && confirmBtn){
     form.submit();
   });
 }
+
+// Desktop navigation: keep the Services dropdown open after click so its links are actually clickable.
+const navServices=document.querySelector('.nav-services');
+if(navServices){
+  const navServicesTrigger=navServices.querySelector(':scope > a');
+  const servicesMenu=navServices.querySelector('.services-menu');
+  if(navServicesTrigger && servicesMenu){
+    navServicesTrigger.setAttribute('aria-haspopup','true');
+    navServicesTrigger.setAttribute('aria-expanded','false');
+    navServicesTrigger.addEventListener('click',e=>{
+      if(window.matchMedia('(min-width:981px)').matches){
+        e.preventDefault();
+        const willOpen=!navServices.classList.contains('open');
+        navServices.classList.toggle('open',willOpen);
+        navServicesTrigger.setAttribute('aria-expanded',String(willOpen));
+      }
+    });
+    servicesMenu.addEventListener('click',e=>e.stopPropagation());
+    document.addEventListener('click',e=>{
+      if(!navServices.contains(e.target)){
+        navServices.classList.remove('open');
+        navServicesTrigger.setAttribute('aria-expanded','false');
+      }
+    });
+    document.addEventListener('keydown',e=>{
+      if(e.key==='Escape'){
+        navServices.classList.remove('open');
+        navServicesTrigger.setAttribute('aria-expanded','false');
+        navServicesTrigger.focus();
+      }
+    });
+  }
+}

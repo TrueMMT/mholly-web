@@ -278,3 +278,39 @@ body::before{content:"";position:fixed;inset:-35%;z-index:0;pointer-events:none;
   .nav-services .services-menu{display:none!important}
   .nav-services.open .services-menu{display:block!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important}
 }
+
+
+/* v5.1 — click-only services dropdown. No hover state can override the click state. */
+.services-trigger{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  border:0!important;
+  background:transparent!important;
+  font:inherit!important;
+  font-weight:800!important;
+  color:#aaaab2!important;
+  cursor:pointer!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:7px!important;
+}
+@media(min-width:981px){
+  .nav-services:hover .services-menu,
+  .nav-services:focus-within .services-menu{
+    opacity:0!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+    transform:translate(-50%,8px)!important;
+  }
+  .nav-services.open .services-menu,
+  .nav-services.open:hover .services-menu,
+  .nav-services.open:focus-within .services-menu{
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    transform:translate(-50%,0)!important;
+  }
+  .nav-services.open .services-trigger{color:#fff!important}
+  .nav-services.open .chev{transform:rotate(180deg)!important}
+  .services-menu a{pointer-events:auto!important;position:relative!important;z-index:2!important}
+}

@@ -52,38 +52,51 @@ if(form && modal && confirmBtn){
   });
 }
 
-// v5.0 — Leistungen: first click opens the menu and keeps it open.
-// It closes only after choosing a submenu item, clicking outside, or pressing Escape.
+// v5.1 — reliable click menu for Leistungen.
+// First click opens the menu and it stays open. A submenu click always navigates.
 document.querySelectorAll('.nav-services').forEach(group=>{
   const trigger=group.querySelector('.services-trigger');
   const menu=group.querySelector('.services-menu');
   if(!trigger || !menu) return;
 
-  trigger.setAttribute('aria-expanded','false');
+  const closeMenu=()=>{
+    group.classList.remove('open');
+    trigger.setAttribute('aria-expanded','false');
+  };
 
   trigger.addEventListener('click',e=>{
     e.preventDefault();
     e.stopPropagation();
-    const willOpen=!group.classList.contains('open');
+    const open=!group.classList.contains('open');
     document.querySelectorAll('.nav-services.open').forEach(other=>{
       if(other!==group){
         other.classList.remove('open');
         other.querySelector('.services-trigger')?.setAttribute('aria-expanded','false');
       }
     });
-    group.classList.toggle('open',willOpen);
-    trigger.setAttribute('aria-expanded',willOpen ? 'true' : 'false');
+    group.classList.toggle('open',open);
+    trigger.setAttribute('aria-expanded',open?'true':'false');
   });
 
-  // Do not let a click inside the dropdown be treated as an outside click.
-  // Normal <a href> navigation is preserved; the new page naturally has the menu closed.
-  menu.addEventListener('click',e=>e.stopPropagation());
+  // Explicit navigation makes the two submenu entries work even if another
+  // click handler or browser quirk would otherwise swallow the link click.
+  menu.querySelectorAll('a[href]').forEach(link=>{
+    link.addEventListener('click',e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      const target=link.getAttribute('href');
+      closeMenu();
+      if(target) window.location.href=target;
+    });
+  });
 });
 
-document.addEventListener('click',()=>{
+document.addEventListener('click',e=>{
   document.querySelectorAll('.nav-services.open').forEach(group=>{
-    group.classList.remove('open');
-    group.querySelector('.services-trigger')?.setAttribute('aria-expanded','false');
+    if(!group.contains(e.target)){
+      group.classList.remove('open');
+      group.querySelector('.services-trigger')?.setAttribute('aria-expanded','false');
+    }
   });
 });
 

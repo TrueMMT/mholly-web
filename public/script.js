@@ -51,3 +51,46 @@ if(form && modal && confirmBtn){
     form.submit();
   });
 }
+
+// v5.0 — Leistungen: first click opens the menu and keeps it open.
+// It closes only after choosing a submenu item, clicking outside, or pressing Escape.
+document.querySelectorAll('.nav-services').forEach(group=>{
+  const trigger=group.querySelector('.services-trigger');
+  const menu=group.querySelector('.services-menu');
+  if(!trigger || !menu) return;
+
+  trigger.setAttribute('aria-expanded','false');
+
+  trigger.addEventListener('click',e=>{
+    e.preventDefault();
+    e.stopPropagation();
+    const willOpen=!group.classList.contains('open');
+    document.querySelectorAll('.nav-services.open').forEach(other=>{
+      if(other!==group){
+        other.classList.remove('open');
+        other.querySelector('.services-trigger')?.setAttribute('aria-expanded','false');
+      }
+    });
+    group.classList.toggle('open',willOpen);
+    trigger.setAttribute('aria-expanded',willOpen ? 'true' : 'false');
+  });
+
+  // Do not let a click inside the dropdown be treated as an outside click.
+  // Normal <a href> navigation is preserved; the new page naturally has the menu closed.
+  menu.addEventListener('click',e=>e.stopPropagation());
+});
+
+document.addEventListener('click',()=>{
+  document.querySelectorAll('.nav-services.open').forEach(group=>{
+    group.classList.remove('open');
+    group.querySelector('.services-trigger')?.setAttribute('aria-expanded','false');
+  });
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape') return;
+  document.querySelectorAll('.nav-services.open').forEach(group=>{
+    group.classList.remove('open');
+    group.querySelector('.services-trigger')?.setAttribute('aria-expanded','false');
+  });
+});

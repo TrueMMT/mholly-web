@@ -249,3 +249,32 @@ body::before{content:"";position:fixed;inset:-35%;z-index:0;pointer-events:none;
   .services-menu{display:block!important;position:static!important;width:100%!important;margin:0!important;opacity:1!important;visibility:visible!important;transform:none!important;pointer-events:auto!important;box-shadow:none!important}
   .services-menu::before{display:none!important}
 }
+
+/* v5.0 — Services menu: click-to-open, stays open until selection/outside click */
+@media (min-width:981px){
+  .nav-services .services-menu{
+    opacity:0!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+    transform:translate(-50%,8px)!important;
+  }
+  .nav-services:hover .services-menu,
+  .nav-services:focus-within .services-menu{
+    opacity:0!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+    transform:translate(-50%,8px)!important;
+  }
+  .nav-services.open .services-menu{
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    transform:translate(-50%,0)!important;
+  }
+  .nav-services.open .chev{transform:rotate(180deg)!important}
+  .nav-services .services-trigger{cursor:pointer}
+}
+@media (max-width:980px){
+  .nav-services .services-menu{display:none!important}
+  .nav-services.open .services-menu{display:block!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important}
+}

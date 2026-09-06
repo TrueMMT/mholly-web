@@ -1,14 +1,16 @@
 services:
   - type: web
-    name: mholly-web
+    name: mholly-web-app
     runtime: node
     plan: free
     buildCommand: npm install
     startCommand: npm start
     envVars:
-      - key: SMTP_USER
+      - key: BREVO_API_KEY
         sync: false
-      - key: SMTP_APP_PASSWORD
-        sync: false
+      - key: SENDER_EMAIL
+        value: mholly.development@gmail.com
       - key: ADMIN_EMAIL
         value: mholly.development@gmail.com
+      - key: SITE_URL
+        sync: false

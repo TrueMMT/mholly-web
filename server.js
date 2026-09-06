@@ -1,6 +1,5 @@
 const express = require('express');
 const multer = require('multer');
-const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const path = require('path');
 
@@ -8,7 +7,6 @@ const app = express();
 app.disable('x-powered-by');
 const PORT = process.env.PORT || 10000;
 const PUBLIC = path.join(__dirname, 'public');
-const LOGO = path.join(PUBLIC, 'assets', 'mholly-logo.png');
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -87,6 +85,21 @@ function plainText(title,id,rows){
   return `${title}\nBestellnummer: ${id}\n\n${rows.map(r=>`${r.label}:\n${r.value}`).join('\n\n')}\n\nM.HOLLY – Web Design & Development`;
 }
 
+async function brevoSend(payload){
+  const apiKey = process.env.BREVO_API_KEY;
+  if (!apiKey) throw new Error('BREVO_API_KEY fehlt.');
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method:'POST',
+    headers:{'accept':'application/json','content-type':'application/json','api-key':apiKey},
+    body:JSON.stringify(payload)
+  });
+  if (!response.ok){
+    const detail = await response.text();
+    throw new Error(`Brevo ${response.status}: ${detail}`);
+  }
+  return response.json();
+}
+
 app.post('/api/order', upload.single('attachment'), async (req,res) => {
   try{
     if (clean(req.body.website)) return res.status(200).json({ok:true}); // honeypot
@@ -95,35 +108,39 @@ app.post('/api/order', upload.single('attachment'), async (req,res) => {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean(req.body.email))) return res.status(400).json({ok:false,message:'Ungültige E-Mail-Adresse.'});
     if (req.body.privacy !== 'yes' || req.body.rules !== 'yes') return res.status(400).json({ok:false,message:'Bestätigungen fehlen.'});
 
-    const smtpUser = process.env.SMTP_USER;
-    const smtpPass = process.env.SMTP_APP_PASSWORD;
-    const admin = process.env.ADMIN_EMAIL || smtpUser;
-    if (!smtpUser || !smtpPass || !admin) return res.status(503).json({ok:false,message:'E-Mail-Versand ist noch nicht konfiguriert.'});
+    const senderEmail = process.env.SENDER_EMAIL || 'mholly.development@gmail.com';
+    const admin = process.env.ADMIN_EMAIL || 'mholly.development@gmail.com';
+    const siteUrl = (process.env.SITE_URL || '').replace(/\/$/,'');
+    if (!process.env.BREVO_API_KEY) return res.status(503).json({ok:false,message:'E-Mail-Versand ist noch nicht konfiguriert.'});
 
     const id = orderId();
     const rows = answers(req.body, req.file);
-    const transporter = nodemailer.createTransport({service:'gmail',auth:{user:smtpUser,pass:smtpPass}});
-    const commonAttachments = [{filename:'mholly-logo.png',path:LOGO,cid:'mholly-logo'}];
-    const adminAttachments = [...commonAttachments];
-    if (req.file) adminAttachments.push({filename:req.file.originalname,content:req.file.buffer,contentType:req.file.mimetype});
+    const logoUrl = siteUrl ? `${siteUrl}/assets/mholly-logo.png` : '';
+    const shell = (opts) => emailShell(opts).replace(
+      '<img src="cid:mholly-logo" width="76" height="76"',
+      logoUrl ? `<img src="${esc(logoUrl)}" width="76" height="76"` : '<div style="font-size:22px;font-weight:900;color:#fff">M.HOLLY</div><img src="" width="0" height="0"'
+    );
 
-    await transporter.sendMail({
-      from:`"M.HOLLY Bestellung" <${smtpUser}>`,
-      to:admin,
-      replyTo:clean(req.body.email),
+    const adminPayload = {
+      sender:{name:'M.HOLLY Bestellung',email:senderEmail},
+      to:[{email:admin,name:'M.HOLLY'}],
+      replyTo:{email:clean(req.body.email),name:clean(req.body.name)},
       subject:`Neue Bestellung M.HOLLY – #${id}`,
-      text:plainText('Neue Projektanfrage',id,rows),
-      html:emailShell({title:'Neue Projektanfrage',intro:'Ein Kunde hat eine neue Anfrage über die M.HOLLY Website gesendet.',id,rows}),
-      attachments:adminAttachments
-    });
+      textContent:plainText('Neue Projektanfrage',id,rows),
+      htmlContent:shell({title:'Neue Projektanfrage',intro:'Ein Kunde hat eine neue Anfrage über die M.HOLLY Website gesendet.',id,rows})
+    };
+    if (req.file){
+      adminPayload.attachment=[{name:req.file.originalname,content:req.file.buffer.toString('base64')}];
+    }
+    await brevoSend(adminPayload);
 
-    await transporter.sendMail({
-      from:`"M.HOLLY" <${smtpUser}>`,
-      to:clean(req.body.email),
+    await brevoSend({
+      sender:{name:'M.HOLLY',email:senderEmail},
+      to:[{email:clean(req.body.email),name:clean(req.body.name)}],
+      replyTo:{email:admin,name:'M.HOLLY'},
       subject:`Deine Anfrage bei M.HOLLY – #${id}`,
-      text:plainText('Danke für deine Anfrage',id,rows),
-      html:emailShell({title:'Danke für deine Anfrage',intro:`Hallo ${clean(req.body.name)}, wir haben deine Projektanfrage erhalten. Unten findest du deine Angaben als Zusammenfassung.`,id,rows,customer:true}),
-      attachments:commonAttachments
+      textContent:plainText('Danke für deine Anfrage',id,rows),
+      htmlContent:shell({title:'Danke für deine Anfrage',intro:`Hallo ${clean(req.body.name)}, wir haben deine Projektanfrage erhalten. Unten findest du deine Angaben als Zusammenfassung.`,id,rows,customer:true})
     });
 
     res.json({ok:true,orderId:id});

@@ -1,43 +1,24 @@
-# M.HOLLY v6.3 — unified update
+# M.HOLLY V6.4 — Brevo API
 
-Obsahuje:
-- mobilný responsive rebuild pre celý web,
-- 4 balíčky vrátane Commerce / E-Commerce,
-- čisté balíčky bez zbytočných tlačidiel pod kartami,
-- e-shop doplnený medzi služby a formulár,
-- vlastný formulárový backend bez FormSubmit,
-- unikátne číslo každej žiadosti/objednávky,
-- branded čierno-červený e-mail pre M.HOLLY,
-- branded potvrdzovací e-mail zákazníkovi s logom a jeho zhrnutím,
-- e-mailová tabuľka obsahuje iba reálne vyplnené otázky a odpovede,
-- priložený PNG/JPG/PDF súbor príde M.HOLLY ako príloha,
-- zákazník po odoslaní zostáva na webe.
+Táto verzia už NEPOUŽÍVA Gmail App Password ani SMTP. Objednávky posiela cez Brevo Transactional Email API.
 
-## Dôležité — Render už musí bežať ako Node Web Service
-Tento update nepoužíva FormSubmit. E-maily odosiela server priamo cez Gmail účet M.HOLLY.
+## Render
+- Language: Node
+- Build Command: `npm install`
+- Start Command: `npm start`
+- Free plan je na začiatok OK.
 
-### Render nastavenie
-Build Command:
-`npm install`
-
-Start Command:
-`npm start`
-
-Environment Variables:
-- `SMTP_USER` = `mholly.development@gmail.com`
-- `SMTP_APP_PASSWORD` = Google App Password pre tento Gmail účet
+## Environment Variables
+Na Renderi nastav:
+- `BREVO_API_KEY` = API kľúč z Brevo
+- `SENDER_EMAIL` = `mholly.development@gmail.com`
 - `ADMIN_EMAIL` = `mholly.development@gmail.com`
+- `SITE_URL` = verejná URL nového Render Web Service, bez lomky na konci
 
-Súbor `render.yaml` je pripravený tiež.
+## Brevo
+1. Vytvor bezplatný Brevo účet.
+2. Pridaj a over sender `mholly.development@gmail.com` (Brevo pošle overovací mail).
+3. V SMTP & API vytvor API key.
+4. API key vlož iba do Render Environment Variables — nikdy nie do GitHubu.
 
-### Google App Password
-Pre Gmail treba mať zapnuté 2-Step Verification a vytvoriť App Password. Tento 16-znakový App Password vlož iba do Render Environment Variable `SMTP_APP_PASSWORD`. Nedávaj ho do GitHubu ani do HTML/JS.
-
-## E-mailový systém
-M.HOLLY dostane predmet:
-`Neue Bestellung M.HOLLY – #MH-YYYYMMDD-XXXXXX`
-
-Zákazník dostane predmet:
-`Deine Anfrage bei M.HOLLY – #MH-YYYYMMDD-XXXXXX`
-
-Číslo generuje server pri každom úspešnom odoslaní, takže zákazníci nedostávajú rovnaké číslo.
+Formulár po odoslaní zostáva na webe. Server vytvorí unikátne číslo MH-YYYYMMDD-XXXXXX, pošle adminovi čierno-červenú tabuľku iba s vyplnenými odpoveďami a zákazníkovi branded potvrdenie s rovnakým číslom.

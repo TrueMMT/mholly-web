@@ -22,3 +22,11 @@
 5. The confirmation checkbox and timestamp are useful evidence inside the submitted email, but a static browser form cannot be made tamper-proof. For stronger proof, log agreements server-side with a signed terms/version record.
 6. Steinwerk Bau has no verified live URL in the recovered M.HOLLY project files, so the portfolio does not invent one. Add the real URL when known.
 7. Legal text on the website is a practical implementation draft, not a substitute for individual legal advice or formal AGB/Widerrufsbelehrung.
+
+
+## v4.4
+- Leistungen und Website-Pakete auf getrennten Seiten
+- stärker sichtbare rote Hintergrundanimation
+- Dropdown ohne Preis-Unterzeilen
+- kräftigere Paketfarben
+- Zusatzleistungs-Icons und Listen-Ausrichtung korrigiert

@@ -1,24 +1,21 @@
-# M.HOLLY V6.4 — Brevo API
+# M.HOLLY V6.5 — Static + FormSubmit
 
-Táto verzia už NEPOUŽÍVA Gmail App Password ani SMTP. Objednávky posiela cez Brevo Transactional Email API.
+This version is designed for the existing Render **Static Site**. No Node server, SMTP, Brevo or API key is required.
+
+## What changed
+- FormSubmit restored using the already-issued invisible form key.
+- Submission posts into a hidden iframe, so the customer stays on the M.HOLLY page.
+- Each request gets a unique order number such as `MH-20260906-48372`.
+- Owner subject becomes `Neue Bestellung M.HOLLY – <order number>`.
+- Email uses FormSubmit's `table` template.
+- Only filled optional fields are included; blank optional answers are disabled for submission.
+- Human-readable German field labels are used so question and answer are easy to distinguish.
+- Customer autoresponse includes the same order number and a copy of the submitted data.
+- File upload remains supported (PNG/JPG/PDF, FormSubmit limit 10 MB total).
 
 ## Render
-- Language: Node
-- Build Command: `npm install`
-- Start Command: `npm start`
-- Free plan je na začiatok OK.
+Use the existing **Static Site** `mholly-web`. Publish directory: `public`.
+No Environment Variables are needed.
 
-## Environment Variables
-Na Renderi nastav:
-- `BREVO_API_KEY` = API kľúč z Brevo
-- `SENDER_EMAIL` = `mholly.development@gmail.com`
-- `ADMIN_EMAIL` = `mholly.development@gmail.com`
-- `SITE_URL` = verejná URL nového Render Web Service, bez lomky na konci
-
-## Brevo
-1. Vytvor bezplatný Brevo účet.
-2. Pridaj a over sender `mholly.development@gmail.com` (Brevo pošle overovací mail).
-3. V SMTP & API vytvor API key.
-4. API key vlož iba do Render Environment Variables — nikdy nie do GitHubu.
-
-Formulár po odoslaní zostáva na webe. Server vytvorí unikátne číslo MH-YYYYMMDD-XXXXXX, pošle adminovi čierno-červenú tabuľku iba s vyplnenými odpoveďami a zákazníkovi branded potvrdenie s rovnakým číslom.
+## Important FormSubmit limitation
+FormSubmit controls the actual HTML email template and sender infrastructure. The site can choose the `table` template and subject, but cannot fully replace that email with a custom red/black M.HOLLY HTML template or force Gmail to show a custom sender address/logo. For that level of email branding, a transactional mail provider/backend is required.

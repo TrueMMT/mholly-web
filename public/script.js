@@ -52,7 +52,9 @@ if(form && modal && confirmBtn){
   });
 }
 
-\n// Services dropdown — click-safe on desktop and mobile.
+
+
+// Services dropdown — hover opens it, then it STAYS open until a link or outside area is clicked.
 document.querySelectorAll('.nav-services').forEach(navServices=>{
   const trigger=navServices.querySelector('.services-trigger');
   const menu=navServices.querySelector('.services-menu');
@@ -63,30 +65,33 @@ document.querySelectorAll('.nav-services').forEach(navServices=>{
     trigger.setAttribute('aria-expanded',String(open));
   };
 
+  // Desktop: merely touching/hovering "Leistungen" opens the menu.
+  // IMPORTANT: there is intentionally NO mouseleave handler, so the menu
+  // cannot disappear while moving the cursor down to one of the two links.
+  navServices.addEventListener('mouseenter',()=>{
+    if(window.matchMedia('(min-width:981px)').matches) setOpen(true);
+  });
+
+  // Click also opens/closes it (useful on touch devices and as a fallback).
   trigger.addEventListener('click',e=>{
     e.preventDefault();
     e.stopPropagation();
     setOpen(!navServices.classList.contains('open'));
   });
 
-  // Clicking a real submenu link must navigate normally.
+  // Do not intercept submenu navigation. Close only after the click has been accepted.
   menu.querySelectorAll('a').forEach(link=>{
     link.addEventListener('click',e=>{
       e.stopPropagation();
+      // navigation proceeds normally through href
     });
   });
 
-  // Keep it open while pointer moves from trigger into the menu.
-  navServices.addEventListener('mouseenter',()=>{
-    if(window.matchMedia('(min-width:981px)').matches) setOpen(true);
-  });
-  navServices.addEventListener('mouseleave',()=>{
-    if(window.matchMedia('(min-width:981px)').matches) setOpen(false);
-  });
-
+  // Close only when the user deliberately clicks somewhere else.
   document.addEventListener('click',e=>{
     if(!navServices.contains(e.target)) setOpen(false);
   });
+
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape') setOpen(false);
   });

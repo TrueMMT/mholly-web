@@ -164,3 +164,14 @@ body::before{content:"";position:fixed;inset:-35%;z-index:0;pointer-events:none;
   .nav-services .services-menu{display:none!important;position:static!important;width:100%!important;opacity:1!important;visibility:visible!important;transform:none!important;pointer-events:auto!important}
   .nav-services.open .services-menu{display:block!important}
 }
+
+/* v4.8 — dropdown must never vanish while moving the mouse to submenu */
+@media (min-width:981px){
+  .nav-services.open .services-menu{
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+    transform:translate(-50%,0)!important;
+  }
+  .nav-services.open .chev{transform:rotate(180deg)!important}
+}

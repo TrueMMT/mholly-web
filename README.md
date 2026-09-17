@@ -1,16 +1,11 @@
-M.HOLLY V6.7
+# M.HOLLY V7.0
 
-- definitive mobile header/menu + hero layout rebuild
-- FormSubmit switched to classic multipart submission in hidden iframe so image/PDF attachments are sent as attachments
-- visitor remains on M.HOLLY
-- success message appears only after the hidden frame returns to form-success.html
-- form fields are reset after confirmed success
-- unique order number and table email remain
-- max attachment size 10 MB
-
-Deploy as the original Render Static Site (publish directory: public).
-
-
-V6.9: Cleaner FormSubmit email fields, box template, dynamic customer CC copy, removed duplicate attachment-name row. Note: FormSubmit controls sender branding and template colors.
-
-V6.10: FormSubmit email template restored from box to table. Customer CC/order-number behavior from V6.9 retained.
+- Überarbeitete Startseite, Navigation, Leistungen und Über-uns-Seite
+- Neue Paketpreise: Essential 150 €, Professional 220 €, Signature 390 €, Commerce ab 2.490 €
+- Projektformular sendet über das M.HOLLY Backend an Firma + automatische Kundenkopie
+- Eindeutige Anfragenummer für Zuordnung / Angebot / Rechnung
+- Formular wird nach Erfolg zurückgesetzt und durch zentrierte Erfolgsmeldung ersetzt
+- Hosting- und Domain-Auswahl ergänzt
+- Projektregeln verkürzt und Verbraucherhinweise rechtlich vorsichtiger formuliert
+- Favicon auf allen Seiten
+- ZIP-Inhalt liegt direkt im Projektstamm (kein zusätzlicher mholly-web-main-Unterordner)

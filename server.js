@@ -19,6 +19,17 @@ const upload = multer({
 
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+// Frontend läuft auf mholly.dev, API auf dem Render-Webservice.
+app.use((req,res,next)=>{
+  const allowed = new Set(['https://mholly.dev','https://www.mholly.dev','https://mholly-web.onrender.com']);
+  const origin=req.headers.origin;
+  if(origin && allowed.has(origin)) res.setHeader('Access-Control-Allow-Origin',origin);
+  res.setHeader('Vary','Origin');
+  res.setHeader('Access-Control-Allow-Methods','POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers','Content-Type');
+  if(req.method==='OPTIONS') return res.sendStatus(204);
+  next();
+});
 app.use(express.static(PUBLIC));
 
 const esc = (s='') => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
@@ -36,8 +47,11 @@ const FIELD_MAP = [
   ['branche','Branche / Projektart'],
   ['paket','Gewünschtes Paket'],
   ['type','Art der Website'],
-  ['goal','Was soll die Website erreichen?'],
+  ['goal','Ziel der Website'],
   ['pages','Gewünschte Seiten / Bereiche'],
+  ['hosting','Hosting'],
+  ['domain','Domain'],
+  ['existing','Vorhandene Website / Domain'],
   ['colors','Farben / Stil'],
   ['deadline','Wunschtermin'],
   ['reference','Beispiel-Websites / Links'],
@@ -103,7 +117,7 @@ async function brevoSend(payload){
 app.post('/api/order', upload.single('attachment'), async (req,res) => {
   try{
     if (clean(req.body.website)) return res.status(200).json({ok:true}); // honeypot
-    const required = ['name','email','branche','paket','type','goal'];
+    const required = ['name','email','branche','paket','type','goal','hosting','domain'];
     if (required.some(k=>!clean(req.body[k]))) return res.status(400).json({ok:false,message:'Bitte alle Pflichtfelder ausfüllen.'});
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean(req.body.email))) return res.status(400).json({ok:false,message:'Ungültige E-Mail-Adresse.'});
     if (req.body.privacy !== 'yes' || req.body.rules !== 'yes') return res.status(400).json({ok:false,message:'Bestätigungen fehlen.'});
@@ -115,6 +129,7 @@ app.post('/api/order', upload.single('attachment'), async (req,res) => {
 
     const id = orderId();
     const rows = answers(req.body, req.file);
+    rows.unshift({label:'Eingang',value:new Intl.DateTimeFormat('de-DE',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Berlin'}).format(new Date())});
     const logoUrl = siteUrl ? `${siteUrl}/assets/mholly-logo.png` : '';
     const shell = (opts) => emailShell(opts).replace(
       '<img src="cid:mholly-logo" width="76" height="76"',
@@ -125,7 +140,7 @@ app.post('/api/order', upload.single('attachment'), async (req,res) => {
       sender:{name:'M.HOLLY Bestellung',email:senderEmail},
       to:[{email:admin,name:'M.HOLLY'}],
       replyTo:{email:clean(req.body.email),name:clean(req.body.name)},
-      subject:`Neue Bestellung M.HOLLY – #${id}`,
+      subject:`Neue Projektanfrage M.HOLLY – ${id}`,
       textContent:plainText('Neue Projektanfrage',id,rows),
       htmlContent:shell({title:'Neue Projektanfrage',intro:'Ein Kunde hat eine neue Anfrage über die M.HOLLY Website gesendet.',id,rows})
     };
@@ -138,7 +153,7 @@ app.post('/api/order', upload.single('attachment'), async (req,res) => {
       sender:{name:'M.HOLLY',email:senderEmail},
       to:[{email:clean(req.body.email),name:clean(req.body.name)}],
       replyTo:{email:admin,name:'M.HOLLY'},
-      subject:`Deine Anfrage bei M.HOLLY – #${id}`,
+      subject:`Deine M.HOLLY Projektanfrage – ${id}`,
       textContent:plainText('Danke für deine Anfrage',id,rows),
       htmlContent:shell({title:'Danke für deine Anfrage',intro:`Hallo ${clean(req.body.name)}, wir haben deine Projektanfrage erhalten. Unten findest du deine Angaben als Zusammenfassung.`,id,rows,customer:true})
     });

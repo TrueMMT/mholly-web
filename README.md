@@ -9,3 +9,7 @@
 - Projektregeln verkürzt und Verbraucherhinweise rechtlich vorsichtiger formuliert
 - Favicon auf allen Seiten
 - ZIP-Inhalt liegt direkt im Projektstamm (kein zusätzlicher mholly-web-main-Unterordner)
+
+
+## V7.2
+- Final mobile responsive polish across navigation, home, services, packages, about and project form.

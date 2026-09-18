@@ -911,3 +911,13 @@ body{background:radial-gradient(circle at 12% 12%,rgba(91,112,150,.11),transpare
 .mh-services-popover[hidden]{display:none!important}
 .mh-services-popover a{pointer-events:auto!important}
 .hero,.story,.home-services,.home-contact,.page,.page.wide,footer{position:relative;z-index:3}
+
+/* V8.7 — final Services popover positioning fix.
+   A later generic stacking rule accidentally changed the popover from fixed to relative,
+   so the JS top coordinate was added to its normal document position. */
+.mh-services-popover{
+  position:fixed!important;
+  margin:0!important;
+  transform:none!important;
+  z-index:10001!important;
+}

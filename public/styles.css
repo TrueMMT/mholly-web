@@ -902,3 +902,12 @@ body{background:radial-gradient(circle at 12% 12%,rgba(91,112,150,.11),transpare
 .project-card .project-visual,.project-card .project-visual.gold{display:flex!important;align-items:flex-end!important}
 .project-card .mock-title{width:100%!important;margin:0!important;padding:0!important}
 .project-card .mock-title span{margin-bottom:14px!important}
+
+/* V8.5 — interaction hotfix: decorative background layers must never block clicks */
+.bg-grid,.ambient,.embers,.ambient::before,.ambient::after,body::before{pointer-events:none!important}
+.site-header{position:relative!important;z-index:10000!important}
+.site-header nav,.site-header nav a,.mh-nav-services,.mh-services-trigger{pointer-events:auto!important}
+.mh-services-popover{z-index:10001!important;pointer-events:auto!important}
+.mh-services-popover[hidden]{display:none!important}
+.mh-services-popover a{pointer-events:auto!important}
+.hero,.story,.home-services,.home-contact,.page,.page.wide,footer{position:relative;z-index:3}

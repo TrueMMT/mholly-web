@@ -67,12 +67,15 @@ if(form && modal && confirmBtn){
 
   const position = () => {
     const r = trigger.getBoundingClientRect();
+    const header = trigger.closest('.site-header');
+    const hr = header ? header.getBoundingClientRect() : r;
     const w = Math.min(330, window.innerWidth - 24);
     let left = r.left + r.width / 2 - w / 2;
     left = Math.max(12, Math.min(left, window.innerWidth - w - 12));
     pop.style.width = w + 'px';
     pop.style.left = Math.round(left) + 'px';
-    pop.style.top = Math.round(r.bottom + 8) + 'px';
+    // Always anchor directly below the visible navigation bar.
+    pop.style.top = Math.round(hr.bottom + 8) + 'px';
   };
   const close = () => {
     pop.hidden = true;

@@ -108,3 +108,30 @@ if(form && modal && confirmBtn){
   window.addEventListener('resize', () => { if (!pop.hidden) position(); });
   window.addEventListener('scroll', () => { if (!pop.hidden) position(); }, {passive:true});
 })();
+
+// Zusammenarbeit: separate Anfrage mit derselben E-Mail-Logik wie Projektanfragen.
+(() => {
+  const form=document.querySelector('#collaboration-form');
+  if(!form) return;
+  const status=document.querySelector('#collab-status');
+  const overlay=document.querySelector('#collab-success');
+  const order=document.querySelector('#collab-order-id');
+  const close=document.querySelector('#collab-success-close');
+  const button=form.querySelector('button[type="submit"]');
+  const showError=(msg)=>{if(!status)return;status.className='form-status error';status.innerHTML=`<strong>Bitte prüfen</strong><span>${msg}</span>`;status.hidden=false;status.style.display='grid';status.scrollIntoView({behavior:'smooth',block:'center'})};
+  form.addEventListener('submit',async(e)=>{
+    e.preventDefault(); if(!form.reportValidity()) return;
+    const file=document.querySelector('#collab-attachment')?.files?.[0];
+    if(file && file.size>10*1024*1024){showError('Die Datei darf maximal 10 MB groß sein.');return}
+    if(status){status.hidden=true;status.style.display='none'}
+    button.disabled=true;button.textContent='Wird gesendet …';
+    try{
+      const response=await fetch(form.action,{method:'POST',body:new FormData(form)});
+      const result=await response.json().catch(()=>({ok:false,message:'Unbekannte Serverantwort.'}));
+      if(!response.ok||!result.ok) throw new Error(result.message||'Die Anfrage konnte nicht gesendet werden.');
+      form.reset(); if(order)order.textContent=result.orderId||'—';
+      if(overlay){overlay.hidden=false;requestAnimationFrame(()=>overlay.classList.add('open'));document.body.style.overflow='hidden'}
+    }catch(err){showError(err.message||'Die Anfrage konnte nicht gesendet werden. Bitte versuche es erneut.')}finally{button.disabled=false;button.textContent='Anfrage senden ↗'}
+  });
+  close?.addEventListener('click',()=>{overlay?.classList.remove('open');setTimeout(()=>{if(overlay)overlay.hidden=true},220);document.body.style.overflow=''});
+})();

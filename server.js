@@ -58,6 +58,23 @@ const FIELD_MAP = [
   ['message','Zusätzliche Informationen']
 ];
 
+
+const COLLAB_FIELD_MAP = [
+  ['name','Name / Firma'],
+  ['email','E-Mail'],
+  ['collabType','Art der Zusammenarbeit'],
+  ['link','Website / Social Media'],
+  ['offer','Was kann angeboten werden?'],
+  ['expectation','Erwartung an die Zusammenarbeit'],
+  ['message','Weitere Informationen']
+];
+
+function collaborationId(){
+  const d=new Date();
+  const date=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  return `MH-COL-${date}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
+}
+
 function answers(body, file){
   const rows = FIELD_MAP.map(([key,label]) => ({ label, value: clean(body[key]) })).filter(r => r.value);
   if (file) rows.push({label:'Angehängte Datei', value:file.originalname});
@@ -163,6 +180,32 @@ app.post('/api/order', upload.single('attachment'), async (req,res) => {
     console.error('ORDER_MAIL_ERROR', err);
     res.status(500).json({ok:false,message:'Die Anfrage konnte nicht gesendet werden.'});
   }
+});
+
+
+app.post('/api/collaboration', upload.single('attachment'), async (req,res) => {
+  try{
+    if(clean(req.body.website)) return res.status(200).json({ok:true});
+    const required=['name','email','collabType','offer','expectation'];
+    if(required.some(k=>!clean(req.body[k]))) return res.status(400).json({ok:false,message:'Bitte alle Pflichtfelder ausfüllen.'});
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean(req.body.email))) return res.status(400).json({ok:false,message:'Ungültige E-Mail-Adresse.'});
+    if(req.body.privacy!=='yes') return res.status(400).json({ok:false,message:'Datenschutzbestätigung fehlt.'});
+    if(!process.env.BREVO_API_KEY) return res.status(503).json({ok:false,message:'E-Mail-Versand ist noch nicht konfiguriert.'});
+    const senderEmail=process.env.SENDER_EMAIL||'mholly.development@gmail.com';
+    const admin=process.env.ADMIN_EMAIL||'mholly.development@gmail.com';
+    const siteUrl=(process.env.SITE_URL||'').replace(/\/$/,'');
+    const id=collaborationId();
+    const rows=COLLAB_FIELD_MAP.map(([key,label])=>({label,value:clean(req.body[key])})).filter(r=>r.value);
+    if(req.file) rows.push({label:'Angehängte Datei',value:req.file.originalname});
+    rows.unshift({label:'Eingang',value:new Intl.DateTimeFormat('de-DE',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Berlin'}).format(new Date())});
+    const logoUrl=siteUrl?`${siteUrl}/assets/mholly-logo.png`:'';
+    const shell=(opts)=>emailShell(opts).replace('<img src="cid:mholly-logo" width="76" height="76"',logoUrl?`<img src="${esc(logoUrl)}" width="76" height="76"`:'<div style="font-size:22px;font-weight:900;color:#fff">M.HOLLY</div><img src="" width="0" height="0"');
+    const adminPayload={sender:{name:'M.HOLLY Zusammenarbeit',email:senderEmail},to:[{email:admin,name:'M.HOLLY'}],replyTo:{email:clean(req.body.email),name:clean(req.body.name)},subject:`Neue Zusammenarbeitsanfrage – ${id}`,textContent:plainText('Neue Zusammenarbeitsanfrage',id,rows),htmlContent:shell({title:'Neue Zusammenarbeitsanfrage',intro:'Eine neue Anfrage zur Zusammenarbeit wurde über die M.HOLLY Website gesendet.',id,rows})};
+    if(req.file) adminPayload.attachment=[{name:req.file.originalname,content:req.file.buffer.toString('base64')}];
+    await brevoSend(adminPayload);
+    await brevoSend({sender:{name:'M.HOLLY',email:senderEmail},to:[{email:clean(req.body.email),name:clean(req.body.name)}],replyTo:{email:admin,name:'M.HOLLY'},subject:`Deine Anfrage zur Zusammenarbeit – ${id}`,textContent:plainText('Danke für deine Anfrage zur Zusammenarbeit',id,rows),htmlContent:shell({title:'Danke für deine Anfrage',intro:`Hallo ${clean(req.body.name)}, wir haben deine Anfrage zur Zusammenarbeit erhalten. Unten findest du deine Angaben als Zusammenfassung.`,id,rows,customer:true})});
+    res.json({ok:true,orderId:id});
+  }catch(err){console.error('COLLAB_MAIL_ERROR',err);res.status(500).json({ok:false,message:'Die Anfrage konnte nicht gesendet werden.'});}
 });
 
 app.use((err,_req,res,_next)=>{

@@ -6,10 +6,10 @@ document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 // Jemné červené častice v pozadí – bez externých knižníc.
 const emberLayer=document.querySelector('.embers');
 if(emberLayer){
-  for(let i=0;i<24;i++){
+  for(let i=0;i<48;i++){
     const e=document.createElement('i'); e.className='ember';
     e.style.left=`${Math.random()*100}%`; e.style.top=`${70+Math.random()*45}%`;
-    e.style.animationDuration=`${14+Math.random()*18}s`; e.style.animationDelay=`-${Math.random()*24}s`;
+    e.style.animationDuration=`${12+Math.random()*16}s`; e.style.animationDelay=`-${Math.random()*24}s`;
     emberLayer.appendChild(e);
   }
 }

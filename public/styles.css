@@ -827,3 +827,65 @@ body{background:radial-gradient(circle at 12% 12%,rgba(91,112,150,.11),transpare
 
 @media(max-width:1050px){.site-header nav{gap:16px!important}.site-header nav>a,.mh-services-trigger{font-size:13px!important}.brand-copy small{display:none}}
 @media(max-width:720px){.site-header nav{gap:6px!important}.packages-page .pricing-grid,.service-showcase{grid-template-columns:1fr!important}.pricing-vivid .price-card{padding:20px!important}.pricing-vivid .price{font-size:29px!important}.service-wide{min-height:0!important;padding:20px!important}.service-wide>span{margin-bottom:18px!important}.project-card,.project-card:nth-child(even){grid-template-columns:1fr!important}.project-card:nth-child(even) .project-visual{order:0}.project-content{padding:21px!important}.project-content h2{font-size:26px!important}.mock-title{font-size:35px!important}.collab-intro{grid-template-columns:1fr;padding:21px}.collab-points{grid-template-columns:1fr}.collab-points span{min-height:50px}}
+
+/* V8.1 — package glow + uniform portfolio cards */
+.pricing-vivid .price-card.tier-professional{
+  border-color:#b66cff!important;
+  box-shadow:0 0 0 1px rgba(182,108,255,.10),0 0 30px rgba(182,108,255,.18),0 18px 55px rgba(0,0,0,.22)!important;
+}
+.pricing-vivid .price-card.tier-professional::after{
+  display:block!important;
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:-2!important;
+  border-radius:inherit!important;
+  pointer-events:none!important;
+  opacity:1!important;
+  background:radial-gradient(circle at 10% 0,rgba(182,108,255,.10),transparent 36%)!important;
+  box-shadow:inset 0 0 36px rgba(182,108,255,.05)!important;
+}
+.pricing-vivid .tier-professional .price-kicker,
+.pricing-vivid .tier-professional li::before{color:#d18cff!important}
+
+/* Every portfolio entry uses exactly the same structure and proportions. */
+.projects{display:grid!important;gap:20px!important}
+.project-card,
+.project-card:nth-child(even){
+  display:grid!important;
+  grid-template-columns:minmax(300px,.82fr) 1.18fr!important;
+  min-height:330px!important;
+  border:1px solid var(--mh-line)!important;
+  border-radius:20px!important;
+  background:linear-gradient(145deg,#0e1117,#090a0e)!important;
+  box-shadow:0 20px 60px rgba(0,0,0,.2)!important;
+  overflow:hidden!important;
+}
+.project-card:nth-child(even) .project-visual{order:0!important}
+.project-card .project-visual,
+.project-card .project-visual.gold{
+  min-height:330px!important;
+  padding:28px!important;
+  background:radial-gradient(circle at 70% 30%,rgba(127,147,184,.20),transparent 35%),linear-gradient(135deg,#141924,#090a0d)!important;
+}
+.project-card .mock-title{font-size:44px!important;letter-spacing:-1.5px!important;line-height:.95!important}
+.project-card .project-content{padding:38px!important;justify-content:center!important}
+.project-card .project-content h2{font-size:31px!important;margin:12px 0!important}
+.project-card .project-content p{min-height:54px!important;margin:10px 0!important}
+.project-card .project-meta{margin:10px 0 26px!important}
+.project-card .project-actions{margin-top:0!important}
+@media(max-width:720px){
+  .project-card,.project-card:nth-child(even){grid-template-columns:1fr!important;min-height:0!important}
+  .project-card .project-visual,.project-card .project-visual.gold{min-height:210px!important;padding:20px!important}
+  .project-card .project-content{padding:21px!important}
+  .project-card .project-content p{min-height:0!important}
+  .project-card .mock-title{font-size:35px!important}
+}
+
+/* V8.2 — výraznejší popol/embers v pozadí */
+.embers{opacity:1!important;z-index:-2!important}
+.ember{width:4px!important;height:4px!important;background:rgba(255,76,68,.92)!important;box-shadow:0 0 18px rgba(255,55,48,.95),0 0 5px rgba(255,210,190,.55)!important}
+.ember:nth-child(3n){width:3px!important;height:3px!important;opacity:.78!important;background:rgba(220,224,232,.72)!important;box-shadow:0 0 12px rgba(220,224,232,.38)!important}
+.ember:nth-child(4n){background:#ff8a62!important;opacity:.88!important}
+.ember:nth-child(5n){width:2px!important;height:2px!important;background:rgba(185,190,200,.72)!important;box-shadow:0 0 9px rgba(185,190,200,.28)!important}
+@keyframes floatUp{0%{transform:translate3d(0,35px,0) scale(.75);opacity:0}8%{opacity:.82}45%{opacity:.72}82%{opacity:.42}100%{transform:translate3d(42px,-110vh,0) scale(1.15);opacity:0}}

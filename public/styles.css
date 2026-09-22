@@ -927,3 +927,27 @@ body{background:radial-gradient(circle at 12% 12%,rgba(91,112,150,.11),transpare
   transform:none!important;
   z-index:10001!important;
 }
+
+
+/* v8.9 — translation-safe responsive text
+   Browser translation is allowed again. These rules prevent longer translated
+   labels from overflowing or breaking the mobile layout. */
+.site-header nav a,.mh-services-trigger,.mh-services-popover a,.btn,.nav-cta,button{
+  white-space:normal;overflow-wrap:anywhere;word-break:normal;text-align:center;
+}
+.site-header nav{min-width:0}
+.site-header nav a,.mh-services-trigger{min-width:0}
+.brand-copy{min-width:0}
+.brand-copy strong,.brand-copy small{overflow-wrap:anywhere}
+.hero h1,.page-head h1,h1,h2,h3,p,.card,.package-card,.project-card{overflow-wrap:anywhere}
+input,select,textarea,button{max-width:100%}
+@media(max-width:900px){
+  .site-header nav.open{max-width:calc(100vw - 32px);overflow-x:hidden}
+  .site-header nav.open a,.site-header nav.open .mh-services-trigger{width:100%;height:auto;min-height:44px;padding-top:11px;padding-bottom:11px;line-height:1.25}
+  .mh-services-popover a{height:auto;min-height:56px;line-height:1.2}
+}
+@media(max-width:520px){
+  .btn,.nav-cta,button{height:auto;min-height:44px;line-height:1.2}
+  .brand{min-width:0}
+  .brand-copy small{white-space:normal}
+}

@@ -136,7 +136,8 @@ if(form && modal && confirmBtn){
   close?.addEventListener('click',()=>{overlay?.classList.remove('open');setTimeout(()=>{if(overlay)overlay.hidden=true},220);document.body.style.overflow=''});
 })();
 
-// V9.0 — explicit language chooser. No automatic browser-language redirect.
+// V10.0 — language chooser translates the CURRENT page in place.
+// No redirect: dimensions, responsive layout and page structure stay unchanged.
 (() => {
   const nav = document.querySelector('.site-header nav');
   if (!nav || document.querySelector('.lang-switcher')) return;
@@ -145,16 +146,31 @@ if(form && modal && confirmBtn){
     ['pt','🇵🇹','Português'],['es','🇪🇸','Español'],['it','🇮🇹','Italiano'],['pl','🇵🇱','Polski'],
     ['nl','🇳🇱','Nederlands'],['fr','🇫🇷','Français'],['de','🇦🇹','Österreich'],['sk','🇸🇰','Slovenčina'],['cs','🇨🇿','Čeština']
   ];
+  const saved = localStorage.getItem('mholly-lang') || 'de';
   const wrap=document.createElement('div'); wrap.className='lang-switcher';
-  wrap.innerHTML=`<button class="lang-btn" type="button" aria-label="Sprache wählen" aria-expanded="false">🌐 <span>DE</span>⌄</button><div class="lang-menu">${langs.map(([c,f,n])=>`<button type="button" data-lang="${c}"><span class="flag">${f}</span>${n}</button>`).join('')}</div>`;
+  wrap.innerHTML=`<button class="lang-btn" type="button" aria-label="Sprache wählen" aria-expanded="false">🌐 <span>${saved.toUpperCase()}</span>⌄</button><div class="lang-menu">${langs.map(([c,f,n])=>`<button type="button" data-lang="${c}"><span class="flag">${f}</span>${n}</button>`).join('')}</div>`;
   nav.appendChild(wrap);
   const btn=wrap.querySelector('.lang-btn');
+  const label=btn.querySelector('span');
   btn.addEventListener('click',e=>{e.stopPropagation();wrap.classList.toggle('open');btn.setAttribute('aria-expanded',wrap.classList.contains('open'))});
-  wrap.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>{
-    const lang=b.dataset.lang;
-    if(lang==='de'){ location.href=location.pathname+location.search; return; }
-    const source=location.href;
-    location.href='https://translate.google.com/translate?sl=de&tl='+encodeURIComponent(lang)+'&u='+encodeURIComponent(source);
-  }));
+
+  const setGoogleLanguage=(lang, tries=0)=>{
+    const combo=document.querySelector('.goog-te-combo');
+    if(!combo){ if(tries<40) setTimeout(()=>setGoogleLanguage(lang,tries+1),150); return; }
+    if(combo.value!==lang){
+      combo.value=lang;
+      combo.dispatchEvent(new Event('change',{bubbles:true}));
+    }
+  };
+  const choose=(lang)=>{
+    localStorage.setItem('mholly-lang',lang);
+    label.textContent=lang.toUpperCase();
+    wrap.classList.remove('open'); btn.setAttribute('aria-expanded','false');
+    setGoogleLanguage(lang);
+  };
+  wrap.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>choose(b.dataset.lang)));
   document.addEventListener('click',e=>{if(!wrap.contains(e.target)){wrap.classList.remove('open');btn.setAttribute('aria-expanded','false')}});
+  window.addEventListener('mholly-google-translate-ready',()=>setGoogleLanguage(saved));
+  setGoogleLanguage(saved);
 })();
+

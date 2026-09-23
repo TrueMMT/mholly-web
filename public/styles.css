@@ -1215,3 +1215,9 @@ body{
   .project-content,.project-visual,.about-copy,.collab-intro,.contact-aside,.project-form{padding:20px 17px!important}.form-section{padding:18px 14px!important}.form-section h3{font-size:22px!important}.section-number{font-size:28px!important}
   footer{padding-bottom:28px!important;gap:13px!important}footer nav{flex-wrap:wrap!important;gap:12px!important}
 }
+
+/* V10 language engine: Google translator stays invisible; only M.HOLLY selector is shown. */
+#google_translate_element,.goog-te-banner-frame,.goog-te-balloon-frame,.skiptranslate iframe{display:none!important;visibility:hidden!important;height:0!important;width:0!important}
+body{top:0!important;position:static!important}
+.goog-text-highlight{background:transparent!important;box-shadow:none!important}
+font[style*="vertical-align"]{background:transparent!important;box-shadow:none!important}

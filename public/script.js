@@ -175,3 +175,39 @@ if(form && modal && confirmBtn){
     }
   });
 })();
+
+
+// V10.8 — hide translation transitions so visitors never see a wrong language flash.
+(() => {
+  const html=document.documentElement;
+  let settleTimer=0, hardTimer=0;
+  const finish=()=>{
+    clearTimeout(settleTimer); clearTimeout(hardTimer);
+    html.classList.remove('mh-translation-loading');
+    document.body?.classList.remove('mh-language-switching');
+  };
+  const scheduleFinish=(ms=450)=>{ clearTimeout(settleTimer); settleTimer=setTimeout(finish,ms); };
+
+  // Existing translated session: GTranslate restores from its cookie after load.
+  if(html.classList.contains('mh-translation-loading')){
+    const obs=new MutationObserver(()=>scheduleFinish(420));
+    const start=()=>{
+      if(!document.body) return;
+      obs.observe(document.body,{subtree:true,childList:true,characterData:true});
+      scheduleFinish(900);
+      hardTimer=setTimeout(()=>{obs.disconnect();finish()},2600);
+    };
+    document.readyState==='loading'?document.addEventListener('DOMContentLoaded',start,{once:true}):start();
+  }
+
+  // Manual selector: cover the page before GTranslate starts replacing text.
+  document.addEventListener('change',(e)=>{
+    const sel=e.target;
+    if(!(sel instanceof HTMLSelectElement) || !sel.closest('.gtranslate_wrapper')) return;
+    document.body?.classList.add('mh-language-switching');
+    const obs=new MutationObserver(()=>scheduleFinish(420));
+    if(document.body) obs.observe(document.body,{subtree:true,childList:true,characterData:true});
+    scheduleFinish(1000);
+    hardTimer=setTimeout(()=>{obs.disconnect();finish()},2600);
+  },true);
+})();

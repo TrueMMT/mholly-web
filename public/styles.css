@@ -1004,3 +1004,52 @@ body{
   .hero.hero-v2{background:linear-gradient(180deg,rgba(2,3,6,.22),rgba(2,3,6,.60) 40%,rgba(2,3,6,.94) 80%)!important}
   .about-hero{padding:28px 22px!important}
 }
+
+/* ===== V9.2 — readability + unified red neon system ===== */
+:root{--mh-neon:#ff2d3d;--mh-neon-soft:rgba(255,45,61,.34);--mh-neon-faint:rgba(255,45,61,.13)}
+body{
+  background:
+    linear-gradient(rgba(2,4,8,.48),rgba(2,4,8,.62)),
+    url('assets/mholly-planet-bg-hd.jpg') center top/cover fixed no-repeat!important;
+}
+/* Hero: cleaner glass panel; no muddy black block and much stronger copy contrast. */
+.hero.hero-v2{
+  background:linear-gradient(90deg,rgba(4,7,12,.86) 0%,rgba(4,7,12,.74) 42%,rgba(4,7,12,.30) 72%,rgba(4,7,12,.16) 100%)!important;
+  border:1px solid var(--mh-neon)!important;
+  box-shadow:0 0 0 1px rgba(255,45,61,.08),0 0 26px var(--mh-neon-soft),0 30px 90px rgba(0,0,0,.52)!important;
+  backdrop-filter:blur(5px) saturate(1.12)!important;
+}
+.hero.hero-v2::after{background:linear-gradient(transparent,rgba(3,5,9,.68))!important}
+.hero h1{color:#fff!important;text-shadow:0 3px 18px rgba(0,0,0,.95),0 0 1px #fff!important}
+.hero h1 em{background:none!important;-webkit-background-clip:initial!important;color:#f4f6f9!important}
+.hero .hero-outline{color:#ff3345!important;text-shadow:0 0 18px rgba(255,45,61,.28),0 3px 18px #000!important}
+.hero p,.page-head>p,.section-head p{color:#d2d7df!important;text-shadow:0 2px 12px rgba(0,0,0,.8)}
+.eyebrow,.kicker{color:#d8dee8!important}
+
+/* One neon colour around all important panels/cards. */
+.home-service-grid>a,.card,.service-cards .card,.price-card,.project-card,.portfolio-card,
+.services-cta,.extras,.extra-card,.collab-intro,.contact-aside,.project-form,.about-mini-card,
+.truth-box,.about-hero,.team-value,.about-cta,.form-section,.portfolio-shop-section .project-card{
+  border:1px solid rgba(255,45,61,.72)!important;
+  box-shadow:0 0 0 1px rgba(255,45,61,.05),0 0 18px rgba(255,45,61,.16),0 18px 48px rgba(0,0,0,.34)!important;
+}
+.home-service-grid>a:hover,.card:hover,.service-cards .card:hover,.price-card:hover,.project-card:hover,
+.portfolio-card:hover,.extra-card:hover{
+  border-color:var(--mh-neon)!important;
+  box-shadow:0 0 0 1px rgba(255,45,61,.10),0 0 30px rgba(255,45,61,.28),0 24px 58px rgba(0,0,0,.42)!important;
+}
+/* Override the old multi-colour package/extras borders. */
+.pricing-vivid .price-card.tier-essential,.pricing-vivid .price-card.tier-professional,.pricing-vivid .price-card.tier-signature,
+.extras-grid .extra-card:nth-child(1),.extras-grid .extra-card:nth-child(2),.extras-grid .extra-card:nth-child(3),.extras-grid .extra-card:nth-child(4){
+  border-color:rgba(255,45,61,.72)!important;
+  box-shadow:0 0 0 1px rgba(255,45,61,.05),0 0 20px rgba(255,45,61,.16),0 24px 64px rgba(0,0,0,.38)!important;
+}
+/* Stronger typography site-wide. */
+h1,h2,h3,.card h2,.price-card h3,.project-card h2,.portfolio-card h2,.home-service-grid strong{color:#fff!important;font-weight:850!important;text-shadow:0 2px 14px rgba(0,0,0,.72)}
+p,.card p,.price-card p,.project-card p,.portfolio-card p,.story-copy p,.services-cta p,.about-copy p,.collab-intro p{color:#c9ced7!important}
+.card span,.price-card li,.project-card span,.portfolio-card span,.services-note,.story-point span{color:#aeb5c0!important}
+
+@media(max-width:980px){
+  body{background-image:linear-gradient(rgba(2,4,8,.52),rgba(2,4,8,.70)),url('assets/mholly-planet-bg-hd.jpg')!important;background-size:auto 1150px!important;background-position:54% top!important;background-repeat:repeat-y!important}
+  .hero.hero-v2{background:linear-gradient(180deg,rgba(3,6,10,.30),rgba(3,6,10,.68) 42%,rgba(3,6,10,.92) 82%)!important}
+}

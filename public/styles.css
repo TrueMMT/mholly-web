@@ -1195,3 +1195,23 @@ body{
   .page-head h1{font-size:clamp(40px,12vw,60px)!important;line-height:.98!important;letter-spacing:-2.5px!important}
   .page-head>p,.home-services-head>p{font-size:15px!important;line-height:1.7!important}
 }
+
+/* ===== V9.9 MOBILE REBUILD ===== */
+@media(max-width:620px){
+  html,body{overflow-x:hidden!important}
+  body{background-size:auto 100vh!important;background-position:48% top!important;background-repeat:repeat-y!important}
+  .site-header{width:calc(100% - 20px)!important;min-height:72px!important;margin-top:10px!important;padding:8px 12px!important;border-radius:18px!important}
+  .brand img{width:48px!important;height:48px!important}.brand-copy strong{font-size:17px!important}.menu-btn{font-size:30px!important;padding:8px!important}
+  .hero.hero-v2{width:calc(100% - 20px)!important;min-height:auto!important;margin:10px auto 34px!important;padding:34px 18px 24px!important;display:block!important;border-radius:20px!important;background:linear-gradient(180deg,rgba(3,6,11,.72),rgba(3,6,11,.91))!important;backdrop-filter:blur(2px)!important}
+  .hero-copy{width:100%!important;max-width:none!important}.eyebrow{font-size:9px!important;letter-spacing:1.45px!important;gap:8px!important;white-space:normal!important}.hero-badge{margin-top:20px!important;font-size:8px!important;letter-spacing:1.15px!important;padding:8px 10px!important}
+  .hero h1{font-size:clamp(40px,11.5vw,54px)!important;line-height:.99!important;letter-spacing:-2.2px!important;margin:30px 0 22px!important}.hero h1 br{display:none!important}.hero h1 em,.hero .hero-outline{display:block!important;margin-top:5px!important;font-size:1em!important;letter-spacing:-2.2px!important;-webkit-text-stroke:0!important}.hero .hero-outline{color:#ff3b4d!important;margin-top:13px!important}
+  .hero-copy>p{font-size:16px!important;line-height:1.62!important;color:#eef1f5!important;margin:0!important;text-shadow:0 2px 10px #000!important}.hero-actions{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;margin-top:26px!important}.hero-actions .btn{width:100%!important;min-height:56px!important;padding:15px 18px!important;font-size:14px!important;border-radius:13px!important}
+  .hero-trust{display:grid!important;grid-template-columns:1fr!important;gap:0!important;margin-top:26px!important;padding-top:15px!important}.hero-trust span{padding:9px 0!important;font-size:10px!important;border-bottom:1px solid rgba(255,255,255,.07)!important}.hero-trust span:last-child{border-bottom:0!important}
+  .hero-mark{display:none!important}
+  .page,.page.wide,.story,.home-strip,footer{width:calc(100% - 20px)!important}.page,.page.wide{padding-top:38px!important}.page-head,.home-services-head{padding:21px 17px 23px!important;margin-bottom:28px!important}.page-head h1,.home-services-head h2,.section-head h2{font-size:clamp(37px,10.5vw,50px)!important;line-height:1!important;letter-spacing:-2px!important}.page-head>p,.home-services-head>p{font-size:15px!important;line-height:1.6!important}
+  .home-service-grid,.cards,.pricing-grid,.team-grid,.extras-grid,.process-row{grid-template-columns:1fr!important}.home-service-grid>a,.card,.service-wide,.project-card,.price-card{border-radius:17px!important}.home-service-grid>a{padding:22px 18px!important}.home-service-grid>a h3,.home-service-grid>a strong{font-size:21px!important}.home-service-grid>a p{font-size:14px!important;line-height:1.55!important}
+  .story{padding:24px 18px!important;border-radius:18px!important}.story-label h2{font-size:31px!important;letter-spacing:-1.3px!important}.story-copy .lead{font-size:27px!important}.story-copy>p:not(.lead){font-size:15px!important;line-height:1.65!important}.story-points{gap:10px!important}.story-point{padding:17px!important}
+  .packages-page .pricing-vivid .price-card{padding:22px 18px!important;border-radius:18px!important}.packages-page .price-card h3{font-size:27px!important}.packages-page .price{font-size:39px!important}.packages-page .price-card li{font-size:13px!important}
+  .project-content,.project-visual,.about-copy,.collab-intro,.contact-aside,.project-form{padding:20px 17px!important}.form-section{padding:18px 14px!important}.form-section h3{font-size:22px!important}.section-number{font-size:28px!important}
+  footer{padding-bottom:28px!important;gap:13px!important}footer nav{flex-wrap:wrap!important;gap:12px!important}
+}

@@ -136,9 +136,10 @@ if(form && modal && confirmBtn){
   close?.addEventListener('click',()=>{overlay?.classList.remove('open');setTimeout(()=>{if(overlay)overlay.hidden=true},220);document.body.style.overflow=''});
 })();
 
-// V10.4 — manual language chooser.
-// A fresh browser session always starts in German. A language is used only after
-// the visitor explicitly chooses it, and is remembered only for this tab/session.
+// V10.6 — manual whole-site language chooser.
+// German is always the default for a NEW tab/session. Translation only starts
+// after the visitor explicitly chooses a language. The chosen language then
+// follows the visitor across every page in the same tab.
 (() => {
   const nav = document.querySelector('.site-header nav');
   if (!nav || document.querySelector('.lang-switcher')) return;
@@ -149,52 +150,91 @@ if(form && modal && confirmBtn){
     ['pt','Português'],['nl','Nederlands'],['sv','Svenska']
   ];
   const valid = new Set(langs.map(([c]) => c));
-  const current = sessionStorage.getItem('mholly-manual-lang') || 'de';
-
-  // Old versions used localStorage. Never let that auto-translate the site again.
-  localStorage.removeItem('mholly-lang');
-  localStorage.removeItem('mholly-lang-version');
+  let current = sessionStorage.getItem('mholly-manual-lang');
+  if (!valid.has(current)) current = 'de';
 
   const wrap = document.createElement('div');
   wrap.className = 'lang-switcher notranslate';
   wrap.setAttribute('translate','no');
-  wrap.innerHTML = `<button class="lang-btn notranslate" translate="no" type="button" aria-label="Sprache wählen" aria-expanded="false"><span class="lang-globe">🌐</span><span class="lang-current-code">${valid.has(current)?current.toUpperCase():'DE'}</span><span class="lang-arrow">⌄</span></button><div class="lang-menu notranslate" translate="no">${langs.map(([c,n])=>`<button type="button" data-lang="${c}" class="notranslate" translate="no"><span class="lang-option-code">${c.toUpperCase()}</span><span>${n}</span></button>`).join('')}</div>`;
+  wrap.innerHTML = `<button class="lang-btn notranslate" translate="no" type="button" aria-label="Sprache wählen" aria-expanded="false"><span class="lang-globe">🌐</span><span class="lang-current-code">${current.toUpperCase()}</span><span class="lang-arrow">⌄</span></button><div class="lang-menu notranslate" translate="no">${langs.map(([c,n])=>`<button type="button" data-lang="${c}" class="notranslate" translate="no"><span class="lang-option-code">${c.toUpperCase()}</span><span>${n}</span></button>`).join('')}</div>`;
   nav.appendChild(wrap);
 
   const btn = wrap.querySelector('.lang-btn');
   const code = wrap.querySelector('.lang-current-code');
   const close = () => { wrap.classList.remove('open'); btn.setAttribute('aria-expanded','false'); };
 
-  function clearGoogleCookie() {
-    const expires='Thu, 01 Jan 1970 00:00:00 GMT', host=location.hostname;
-    document.cookie=`googtrans=;path=/;expires=${expires};SameSite=Lax`;
-    if(host && host.includes('.')) document.cookie=`googtrans=;path=/;domain=.${host};expires=${expires};SameSite=Lax`;
+  function cookieDomains(){
+    const h=location.hostname;
+    const out=[''];
+    if(h && h.includes('.')) out.push(h, '.'+h.replace(/^www\./,''));
+    return [...new Set(out)];
   }
-  function setGoogleCookie(lang) {
-    clearGoogleCookie();
+  function clearGoogtrans(){
+    const exp='Thu, 01 Jan 1970 00:00:00 GMT';
+    cookieDomains().forEach(d=>{
+      const domain=d?`;domain=${d}`:'';
+      document.cookie=`googtrans=;path=/${domain};expires=${exp};SameSite=Lax`;
+      document.cookie=`googtrans=;path=/${domain};max-age=0;SameSite=Lax`;
+    });
+  }
+  function setGoogtrans(lang){
+    clearGoogtrans();
     if(lang==='de') return;
-    const value=`/de/${lang}`, expires='Tue, 19 Jan 2038 03:14:07 GMT', host=location.hostname;
-    document.cookie=`googtrans=${value};path=/;expires=${expires};SameSite=Lax`;
-    if(host && host.includes('.')) document.cookie=`googtrans=${value};path=/;domain=.${host};expires=${expires};SameSite=Lax`;
+    const value=`/de/${lang}`;
+    cookieDomains().forEach(d=>{
+      const domain=d?`;domain=${d}`:'';
+      document.cookie=`googtrans=${value};path=/${domain};SameSite=Lax`;
+    });
   }
-  function applyLanguage(lang) {
+  function applyLanguage(lang){
     if(!valid.has(lang)) lang='de';
-    sessionStorage.setItem('mholly-manual-lang',lang);
+    sessionStorage.setItem('mholly-manual-lang', lang);
     code.textContent=lang.toUpperCase();
     close();
-    if(lang==='de') { clearGoogleCookie(); location.reload(); return; }
-    setGoogleCookie(lang);
-    const sel=document.querySelector('.goog-te-combo');
-    if(sel) {
-      sel.value=lang;
-      sel.dispatchEvent(new Event('change',{bubbles:true}));
-      // If Google did not react (occasionally happens after another language), reload
-      // with the exact /de/<lang> cookie so it cannot keep the previous language.
-      setTimeout(()=>{ if((sessionStorage.getItem('mholly-manual-lang')||'de')===lang && sel.value!==lang) location.reload(); },250);
-    } else location.reload();
+    setGoogtrans(lang);
+    // Always reload. This makes Google Translate read a clean /de/<lang>
+    // cookie and translate the ENTIRE current page, not only the homepage.
+    location.reload();
   }
 
   btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();wrap.classList.toggle('open');btn.setAttribute('aria-expanded',wrap.classList.contains('open')?'true':'false')});
   wrap.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();applyLanguage(b.dataset.lang)}));
   document.addEventListener('click',e=>{if(!wrap.contains(e.target))close()});
+})();
+
+// V10.5 — reliable mobile "copy current page link" button inside hamburger menu.
+(() => {
+  const nav = document.querySelector('.site-header nav');
+  if (!nav || nav.querySelector('.mobile-copy-link')) return;
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.className = 'mobile-copy-link notranslate';
+  b.setAttribute('translate','no');
+  b.innerHTML = '<span aria-hidden="true">🔗</span><span>Link kopieren</span>';
+  nav.appendChild(b);
+
+  async function copyText(text){
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+    const ta=document.createElement('textarea');
+    ta.value=text; ta.setAttribute('readonly','');
+    ta.style.position='fixed'; ta.style.opacity='0'; ta.style.pointerEvents='none';
+    document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0,99999);
+    const ok=document.execCommand('copy'); ta.remove();
+    if(!ok) throw new Error('copy failed');
+  }
+
+  b.addEventListener('click', async () => {
+    const label=b.querySelector('span:last-child');
+    try {
+      await copyText(location.href);
+      b.classList.add('copied'); label.textContent='Link kopiert ✓';
+      setTimeout(()=>{b.classList.remove('copied');label.textContent='Link kopieren'},1800);
+    } catch (_) {
+      // Last-resort mobile fallback: expose the URL for native long-press/copy.
+      window.prompt('Link kopieren:', location.href);
+    }
+  });
 })();

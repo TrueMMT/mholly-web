@@ -25,4 +25,17 @@ function googleTranslateElementInit(){
   new google.translate.TranslateElement({pageLanguage:'de',includedLanguages:'de,en,sv,nl,pt,es,it,pl,fr,sk,cs',autoDisplay:false},'google_translate_element');
   window.dispatchEvent(new Event('mholly-google-translate-ready'));
 }
-</script><script>(function(){try{localStorage.removeItem('mholly-lang');localStorage.removeItem('mholly-lang-version');if(!sessionStorage.getItem('mholly-manual-lang')){var e='Thu, 01 Jan 1970 00:00:00 GMT',h=location.hostname;document.cookie='googtrans=;path=/;expires='+e+';SameSite=Lax';if(h&&h.indexOf('.')>-1)document.cookie='googtrans=;path=/;domain=.'+h+';expires='+e+';SameSite=Lax';}}catch(_){}})();</script><script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script><script src="script.js"></script></body></html>
+</script><script>(function(){
+try{
+  localStorage.removeItem('mholly-lang');
+  localStorage.removeItem('mholly-lang-version');
+  var valid=['de','en','sk','cs','pl','fr','es','it','pt','nl','sv'];
+  var lang=sessionStorage.getItem('mholly-manual-lang');
+  if(valid.indexOf(lang)<0){lang='de';sessionStorage.removeItem('mholly-manual-lang');}
+  var h=location.hostname, exp='Thu, 01 Jan 1970 00:00:00 GMT';
+  var ds=['']; if(h&&h.indexOf('.')>-1){ds.push(h);ds.push('.'+h.replace(/^www\./,''));}
+  ds=[...new Set(ds)];
+  ds.forEach(function(d){var dom=d?';domain='+d:'';document.cookie='googtrans=;path=/'+dom+';expires='+exp+';SameSite=Lax';document.cookie='googtrans=;path=/'+dom+';max-age=0;SameSite=Lax';});
+  if(lang!=='de') ds.forEach(function(d){var dom=d?';domain='+d:'';document.cookie='googtrans=/de/'+lang+';path=/'+dom+';SameSite=Lax';});
+}catch(_){ }
+})();</script><script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script><script src="script.js"></script></body></html>

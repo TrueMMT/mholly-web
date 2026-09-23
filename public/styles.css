@@ -1273,3 +1273,28 @@ font[style*="vertical-align"]{background:transparent!important;box-shadow:none!i
   .mh-services-trigger{width:100%!important;text-align:left!important}
   .lang-menu{max-height:300px!important;overflow-y:auto!important}
 }
+
+/* V10.5 mobile copy-link control */
+.mobile-copy-link{display:none}
+@media (max-width: 820px){
+  .site-header nav .mobile-copy-link{display:flex!important;width:100%;align-items:center;justify-content:center;gap:.55rem;min-height:48px;margin-top:4px;border:1px solid rgba(255,65,80,.45);border-radius:12px;background:rgba(8,10,15,.88);color:#fff;font:inherit;font-weight:800;letter-spacing:.02em;cursor:pointer}
+  .site-header nav .mobile-copy-link:active{transform:scale(.985)}
+  .site-header nav .mobile-copy-link.copied{border-color:rgba(80,255,160,.7);box-shadow:0 0 16px rgba(80,255,160,.16)}
+}
+
+
+/* V10.6 language/layout hardening */
+.lang-switcher,.lang-switcher *{box-sizing:border-box}
+.lang-btn{white-space:nowrap;min-width:78px;justify-content:center}
+.lang-menu button{white-space:nowrap}
+.goog-te-banner-frame.skiptranslate,.goog-te-banner-frame{display:none!important}
+body{top:0!important}
+@media (max-width:760px){
+  .site-header nav.open{display:grid!important;grid-template-columns:1fr!important;gap:8px!important;align-items:stretch!important}
+  .site-header nav.open>a,.site-header nav.open>.mh-nav-services,.site-header nav.open>.lang-switcher,.site-header nav.open>.mobile-copy-link{width:100%!important;min-width:0!important;margin:0!important;grid-column:1!important}
+  .site-header nav.open>a,.site-header nav.open .mh-services-trigger,.site-header nav.open .lang-btn,.site-header nav.open .mobile-copy-link{min-height:46px!important;height:auto!important}
+  .site-header nav.open .lang-switcher{order:90!important}
+  .site-header nav.open .mobile-copy-link{order:91!important}
+  .site-header nav.open .lang-menu{position:static!important;width:100%!important;max-height:260px!important;overflow:auto!important;margin-top:6px!important}
+  .site-header nav.open .lang-menu button{min-height:42px!important}
+}

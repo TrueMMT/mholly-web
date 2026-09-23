@@ -1261,3 +1261,15 @@ font[style*="vertical-align"]{background:transparent!important;box-shadow:none!i
   .site-header nav.open>*{order:initial!important}
   .site-header nav.open>.lang-switcher{order:99!important}
 }
+
+/* V10.3 language/mobile stability: translations may change text, never the layout grid. */
+.lang-switcher,.lang-switcher *{box-sizing:border-box!important}
+.lang-current-code{display:block!important;overflow:hidden!important;text-overflow:clip!important;white-space:nowrap!important}
+@media(max-width:980px){
+  .site-header nav.open{display:flex!important;flex-direction:column!important;gap:0!important;align-items:stretch!important}
+  .site-header nav.open>a,.site-header nav.open>.mh-nav-services,.site-header nav.open>.lang-switcher{flex:0 0 auto!important;width:100%!important;margin:0!important}
+  .site-header nav.open>a,.mh-services-trigger,.lang-btn{min-height:48px!important;height:auto!important;padding-top:12px!important;padding-bottom:12px!important}
+  .site-header nav.open>a{display:flex!important;align-items:center!important}
+  .mh-services-trigger{width:100%!important;text-align:left!important}
+  .lang-menu{max-height:300px!important;overflow-y:auto!important}
+}

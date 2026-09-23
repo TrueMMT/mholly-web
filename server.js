@@ -30,6 +30,7 @@ app.use((req,res,next)=>{
   if(req.method==='OPTIONS') return res.sendStatus(204);
   next();
 });
+app.get('/api/health', (_req,res)=>res.json({ok:true,service:'M.HOLLY mail API'}));
 app.use(express.static(PUBLIC));
 
 const esc = (s='') => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
@@ -106,7 +107,7 @@ function emailShell({title, intro, id, rows, customer=false}){
           ${rowsHtml(rows)}
         </table>
       </td></tr>
-      ${customer?`<tr><td style="padding:0 28px 26px;color:#94949c;font-size:13px;line-height:1.6">Wir prüfen deine Anfrage und melden uns per E-Mail. Diese Nachricht bestätigt nur den Eingang deiner Anfrage und ist noch keine verbindliche Auftragsbestätigung.</td></tr>`:''}
+      ${customer?`<tr><td style="padding:0 28px 26px;color:#94949c;font-size:13px;line-height:1.6">Wir prüfen deine Anfrage und melden uns per E-Mail. Diese Nachricht bestätigt den Eingang deiner Anfrage. Sie ist noch keine verbindliche Auftragsbestätigung. Preis, Anzahlung, Restzahlung und Leistungsumfang werden erst mit dem später schriftlich bestätigten Angebot verbindlich.</td></tr>`:''}
       <tr><td align="center" style="padding:24px;border-top:1px solid #242429;background:#09090b"><img src="cid:mholly-logo" width="76" height="76" alt="M.HOLLY" style="display:block;border-radius:50%;margin:0 auto 10px"><div style="font-size:12px;font-weight:800;letter-spacing:1.5px;color:#fff">M.HOLLY</div><div style="margin-top:5px;font-size:10px;letter-spacing:1.4px;color:#777780">WEB DESIGN · DEVELOPMENT</div></td></tr>
     </table>
   </td></tr></table></body></html>`;
@@ -116,19 +117,31 @@ function plainText(title,id,rows){
   return `${title}\nBestellnummer: ${id}\n\n${rows.map(r=>`${r.label}:\n${r.value}`).join('\n\n')}\n\nM.HOLLY – Web Design & Development`;
 }
 
-async function brevoSend(payload){
+async function brevoSend(payload, attempts=2){
   const apiKey = process.env.BREVO_API_KEY;
   if (!apiKey) throw new Error('BREVO_API_KEY fehlt.');
-  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-    method:'POST',
-    headers:{'accept':'application/json','content-type':'application/json','api-key':apiKey},
-    body:JSON.stringify(payload)
-  });
-  if (!response.ok){
-    const detail = await response.text();
-    throw new Error(`Brevo ${response.status}: ${detail}`);
+  let lastError;
+  for(let attempt=1; attempt<=attempts; attempt++){
+    try{
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),12000);
+      const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method:'POST',
+        headers:{'accept':'application/json','content-type':'application/json','api-key':apiKey},
+        body:JSON.stringify(payload),
+        signal:controller.signal
+      }).finally(()=>clearTimeout(timer));
+      if (!response.ok){
+        const detail = await response.text();
+        throw new Error(`Brevo ${response.status}: ${detail}`);
+      }
+      return await response.json();
+    }catch(err){
+      lastError=err;
+      if(attempt<attempts) await new Promise(r=>setTimeout(r,350));
+    }
   }
-  return response.json();
+  throw lastError;
 }
 
 app.post('/api/order', upload.single('attachment'), async (req,res) => {
@@ -147,6 +160,7 @@ app.post('/api/order', upload.single('attachment'), async (req,res) => {
     const id = orderId();
     const rows = answers(req.body, req.file);
     rows.unshift({label:'Eingang',value:new Intl.DateTimeFormat('de-DE',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Berlin'}).format(new Date())});
+    rows.push({label:'Hinweis zum Ablauf',value:'Die Anfrage ist unverbindlich. Bei späterer Auftragsbestätigung gelten Preis, Anzahlung, Restzahlung und Leistungsumfang gemäß dem schriftlich bestätigten Angebot.'});
     const logoUrl = siteUrl ? `${siteUrl}/assets/mholly-logo.png` : '';
     const shell = (opts) => emailShell(opts).replace(
       '<img src="cid:mholly-logo" width="76" height="76"',

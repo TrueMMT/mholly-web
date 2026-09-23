@@ -136,34 +136,39 @@ if(form && modal && confirmBtn){
   close?.addEventListener('click',()=>{overlay?.classList.remove('open');setTimeout(()=>{if(overlay)overlay.hidden=true},220);document.body.style.overflow=''});
 })();
 
-// V10.1 — stable manual language chooser.
-// German is always the default for a fresh browser session. A language changes only
-// after the visitor explicitly selects it. The selection is kept while navigating.
+// V10.2 — manual language chooser. German is the source/default language.
+// The selected language is stored across pages and Google Translate is driven by
+// its own googtrans cookie, which is much more reliable than changing the hidden select.
 (() => {
   const nav = document.querySelector('.site-header nav');
   if (!nav || document.querySelector('.lang-switcher')) return;
 
   const langs = [
-    ['de','🇩🇪','Deutsch'],['en','🇬🇧','English'],['sk','🇸🇰','Slovenčina'],['cs','🇨🇿','Čeština'],
-    ['pl','🇵🇱','Polski'],['fr','🇫🇷','Français'],['es','🇪🇸','Español'],['it','🇮🇹','Italiano'],
-    ['pt','🇵🇹','Português'],['nl','🇳🇱','Nederlands'],['sv','🇸🇪','Svenska']
+    ['de','Deutsch'],['en','English'],['sk','Slovenčina'],['cs','Čeština'],
+    ['pl','Polski'],['fr','Français'],['es','Español'],['it','Italiano'],
+    ['pt','Português'],['nl','Nederlands'],['sv','Svenska']
   ];
   const byCode = Object.fromEntries(langs.map(x=>[x[0],x]));
-  const saved = sessionStorage.getItem('mholly-lang') || 'de';
+  const saved = localStorage.getItem('mholly-lang') || 'de';
   const initial = byCode[saved] ? saved : 'de';
 
   const wrap=document.createElement('div');
-  wrap.className='lang-switcher';
+  wrap.className='lang-switcher notranslate';
   wrap.setAttribute('translate','no');
-  wrap.classList.add('notranslate');
-  wrap.innerHTML=`<button class="lang-btn notranslate" translate="no" type="button" aria-label="Sprache wählen" aria-expanded="false"><span class="lang-current-flag">${byCode[initial][1]}</span><span class="lang-current-code">${initial.toUpperCase()}</span><span class="lang-arrow">⌄</span></button><div class="lang-menu notranslate" translate="no">${langs.map(([c,f,n])=>`<button type="button" data-lang="${c}" class="notranslate" translate="no"><span class="flag">${f}</span><span>${n}</span></button>`).join('')}</div>`;
+  wrap.innerHTML=`<button class="lang-btn notranslate" translate="no" type="button" aria-label="Sprache wählen" aria-expanded="false"><span class="lang-globe">🌐</span><span class="lang-current-code">${initial.toUpperCase()}</span><span class="lang-arrow">⌄</span></button><div class="lang-menu notranslate" translate="no">${langs.map(([c,n])=>`<button type="button" data-lang="${c}" class="notranslate" translate="no"><span class="lang-option-code">${c.toUpperCase()}</span><span>${n}</span></button>`).join('')}</div>`;
   nav.appendChild(wrap);
 
   const btn=wrap.querySelector('.lang-btn');
   const code=wrap.querySelector('.lang-current-code');
-  const flag=wrap.querySelector('.lang-current-flag');
-  const updateButton=(lang)=>{ const x=byCode[lang]||byCode.de; code.textContent=x[0].toUpperCase(); flag.textContent=x[1]; };
-  updateButton(initial);
+  const updateButton=(lang)=>{ code.textContent=(byCode[lang]?lang:'de').toUpperCase(); };
+
+  const cookieDomain = location.hostname.includes('.') ? ';domain=.'+location.hostname : '';
+  const setTranslateCookie=(lang)=>{
+    const value = lang==='de' ? '' : `/de/${lang}`;
+    const expiry = lang==='de' ? 'Thu, 01 Jan 1970 00:00:00 GMT' : 'Tue, 19 Jan 2038 03:14:07 GMT';
+    document.cookie=`googtrans=${value};path=/;expires=${expiry};SameSite=Lax`;
+    if(cookieDomain) document.cookie=`googtrans=${value};path=/${cookieDomain};expires=${expiry};SameSite=Lax`;
+  };
 
   btn.addEventListener('click',e=>{
     e.preventDefault(); e.stopPropagation();
@@ -171,33 +176,20 @@ if(form && modal && confirmBtn){
     btn.setAttribute('aria-expanded',wrap.classList.contains('open')?'true':'false');
   });
 
-  const setGoogleLanguage=(lang, tries=0)=>{
-    const combo=document.querySelector('.goog-te-combo');
-    if(!combo){ if(tries<60) setTimeout(()=>setGoogleLanguage(lang,tries+1),120); return; }
-    if(combo.value!==lang){
-      combo.value=lang;
-      combo.dispatchEvent(new Event('change',{bubbles:true}));
-    }
-  };
-
   const choose=(lang)=>{
     if(!byCode[lang]) lang='de';
-    sessionStorage.setItem('mholly-lang',lang);
+    localStorage.setItem('mholly-lang',lang);
     updateButton(lang);
-    document.documentElement.lang=lang;
     wrap.classList.remove('open');
     btn.setAttribute('aria-expanded','false');
-    setGoogleLanguage(lang);
+    setTranslateCookie(lang);
+    location.reload();
   };
-
-  wrap.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();choose(b.dataset.lang)}));
+  wrap.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();choose(b.dataset.lang)}));
   document.addEventListener('click',e=>{if(!wrap.contains(e.target)){wrap.classList.remove('open');btn.setAttribute('aria-expanded','false')}});
 
-  // Only restore a language that was explicitly selected during this browser session.
-  // A new session always starts in the original German version.
-  window.addEventListener('mholly-google-translate-ready',()=>{
-    updateButton(initial);
-    if(initial!=='de') setGoogleLanguage(initial);
-  });
-  if(initial!=='de') setGoogleLanguage(initial);
+  // Keep the selector synchronized on every page. If a non-German language is saved,
+  // ensure the translation cookie exists before Google Translate initializes.
+  updateButton(initial);
+  if(initial!=='de' && !document.cookie.split('; ').some(x=>x.startsWith('googtrans='))) setTranslateCookie(initial);
 })();

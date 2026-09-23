@@ -136,71 +136,8 @@ if(form && modal && confirmBtn){
   close?.addEventListener('click',()=>{overlay?.classList.remove('open');setTimeout(()=>{if(overlay)overlay.hidden=true},220);document.body.style.overflow=''});
 })();
 
-// V10.6 — manual whole-site language chooser.
-// German is always the default for a NEW tab/session. Translation only starts
-// after the visitor explicitly chooses a language. The chosen language then
-// follows the visitor across every page in the same tab.
-(() => {
-  const nav = document.querySelector('.site-header nav');
-  if (!nav || document.querySelector('.lang-switcher')) return;
-
-  const langs = [
-    ['de','Deutsch'],['en','English'],['sk','Slovenčina'],['cs','Čeština'],
-    ['pl','Polski'],['fr','Français'],['es','Español'],['it','Italiano'],
-    ['pt','Português'],['nl','Nederlands'],['sv','Svenska']
-  ];
-  const valid = new Set(langs.map(([c]) => c));
-  let current = sessionStorage.getItem('mholly-manual-lang');
-  if (!valid.has(current)) current = 'de';
-
-  const wrap = document.createElement('div');
-  wrap.className = 'lang-switcher notranslate';
-  wrap.setAttribute('translate','no');
-  wrap.innerHTML = `<button class="lang-btn notranslate" translate="no" type="button" aria-label="Sprache wählen" aria-expanded="false"><span class="lang-globe">🌐</span><span class="lang-current-code">${current.toUpperCase()}</span><span class="lang-arrow">⌄</span></button><div class="lang-menu notranslate" translate="no">${langs.map(([c,n])=>`<button type="button" data-lang="${c}" class="notranslate" translate="no"><span class="lang-option-code">${c.toUpperCase()}</span><span>${n}</span></button>`).join('')}</div>`;
-  nav.appendChild(wrap);
-
-  const btn = wrap.querySelector('.lang-btn');
-  const code = wrap.querySelector('.lang-current-code');
-  const close = () => { wrap.classList.remove('open'); btn.setAttribute('aria-expanded','false'); };
-
-  function cookieDomains(){
-    const h=location.hostname;
-    const out=[''];
-    if(h && h.includes('.')) out.push(h, '.'+h.replace(/^www\./,''));
-    return [...new Set(out)];
-  }
-  function clearGoogtrans(){
-    const exp='Thu, 01 Jan 1970 00:00:00 GMT';
-    cookieDomains().forEach(d=>{
-      const domain=d?`;domain=${d}`:'';
-      document.cookie=`googtrans=;path=/${domain};expires=${exp};SameSite=Lax`;
-      document.cookie=`googtrans=;path=/${domain};max-age=0;SameSite=Lax`;
-    });
-  }
-  function setGoogtrans(lang){
-    clearGoogtrans();
-    if(lang==='de') return;
-    const value=`/de/${lang}`;
-    cookieDomains().forEach(d=>{
-      const domain=d?`;domain=${d}`:'';
-      document.cookie=`googtrans=${value};path=/${domain};SameSite=Lax`;
-    });
-  }
-  function applyLanguage(lang){
-    if(!valid.has(lang)) lang='de';
-    sessionStorage.setItem('mholly-manual-lang', lang);
-    code.textContent=lang.toUpperCase();
-    close();
-    setGoogtrans(lang);
-    // Always reload. This makes Google Translate read a clean /de/<lang>
-    // cookie and translate the ENTIRE current page, not only the homepage.
-    location.reload();
-  }
-
-  btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();wrap.classList.toggle('open');btn.setAttribute('aria-expanded',wrap.classList.contains('open')?'true':'false')});
-  wrap.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();applyLanguage(b.dataset.lang)}));
-  document.addEventListener('click',e=>{if(!wrap.contains(e.target))close()});
-})();
+// V10.7 — language switching is handled by GTranslate.
+// Source language is German and browser-language auto switching is disabled.
 
 // V10.5 — reliable mobile "copy current page link" button inside hamburger menu.
 (() => {

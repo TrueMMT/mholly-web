@@ -1,4 +1,15 @@
-<!doctype html><html lang="de"><head>
+<!doctype html><html lang="de"><head><meta name="google" content="notranslate"><script>
+(function(){
+  if(sessionStorage.getItem('mholly-v107-init')) return;
+  sessionStorage.setItem('mholly-v107-init','1');
+  sessionStorage.removeItem('mholly-manual-lang');
+  localStorage.removeItem('mholly-lang');
+  localStorage.removeItem('mholly-lang-version');
+  var exp='Thu, 01 Jan 1970 00:00:00 GMT', h=location.hostname, ds=[''];
+  if(h&&h.indexOf('.')>-1){ds.push(h,'.'+h.replace(/^www\./,''));}
+  ds.forEach(function(d){var dom=d?';domain='+d:'';document.cookie='googtrans=;path=/'+dom+';expires='+exp+';SameSite=Lax';document.cookie='googtrans=;path=/'+dom+';max-age=0;SameSite=Lax';});
+})();
+</script>
   <meta charset="utf-8"><meta name="robots" content="noindex"><title>Gesendet</title><link rel="icon" type="image/png" href="/assets/mholly-logo.png"></head><body><script>
 try{window.parent.postMessage({type:'mholly-form-success'}, window.location.origin)}catch(e){}
 </script></body></html>

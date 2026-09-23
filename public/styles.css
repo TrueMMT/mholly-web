@@ -1336,3 +1336,13 @@ body.mh-language-switching::after{
   .gtranslate_wrapper select,.gtranslate_wrapper .gt_selector{display:block!important;width:100%!important;min-width:0!important;height:48px!important;margin:0!important;padding:0 38px 0 13px!important;border-radius:11px!important}
   .site-header nav.open>.mobile-copy-link{order:91!important;margin:0!important}
 }
+
+/* V11.0 package text stability: short price labels stay readable after translation. */
+.packages-page .price{display:flex!important;align-items:baseline!important;gap:8px!important;flex-wrap:wrap!important}
+.packages-page .price small{white-space:nowrap!important;word-break:keep-all!important;overflow-wrap:normal!important;line-height:1.2!important}
+.packages-page .one-time{white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;line-height:1.25!important;min-height:0!important}
+@media(max-width:620px){
+ .packages-page .price{gap:6px!important}
+ .packages-page .price small{font-size:11px!important}
+ .packages-page .one-time{font-size:10px!important;letter-spacing:.5px!important}
+}

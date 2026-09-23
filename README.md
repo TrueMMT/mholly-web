@@ -13,3 +13,5 @@
 
 ## V7.2
 - Final mobile responsive polish across navigation, home, services, packages, about and project form.
+
+V9.4: 4K planet upscale, readability rebuild, unified red neon, redesigned packages and home CTA.

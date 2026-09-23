@@ -1079,3 +1079,40 @@ body{
 .contact-aside h2,.collab-intro h2{font-size:34px!important;line-height:1.08!important;color:#fff!important}
 .contact-aside p,.collab-intro p{font-size:15px!important;color:#d1d6de!important;line-height:1.65!important}
 @media(max-width:980px){body{background-image:linear-gradient(rgba(2,4,8,.44),rgba(2,4,8,.60)),url('assets/mholly-planet-clean-hd.jpg')!important;background-size:auto 1150px!important;background-position:52% top!important;background-repeat:repeat-y!important;background-attachment:scroll!important}.project-form{padding:18px!important}.form-section{padding:20px 16px!important}.form-section h3{font-size:23px!important}.home-service-grid>a h3,.home-service-grid>a strong{font-size:22px!important}}
+
+/* ===== V9.4 VISUAL REBUILD — 4K planet, readable content, unified red neon ===== */
+body{
+  background-image:linear-gradient(rgba(2,4,8,.34),rgba(2,3,6,.52)),url('assets/mholly-planet-4k.jpg')!important;
+  background-size:cover!important;background-position:center top!important;background-repeat:no-repeat!important;background-attachment:fixed!important;
+}
+/* Make all major copy readable over the planet */
+.about-copy,.story-copy,.home-services-head,.page-head{
+  text-shadow:0 2px 14px rgba(0,0,0,.92);
+}
+.about-copy{padding:34px!important;border-radius:20px!important;background:linear-gradient(135deg,rgba(4,7,12,.94),rgba(8,8,12,.88))!important;border:1px solid rgba(255,39,57,.72)!important;box-shadow:0 0 0 1px rgba(255,39,57,.12),0 0 26px rgba(255,25,45,.20),0 26px 70px rgba(0,0,0,.46)!important}
+.about-copy h2{color:#fff!important;text-shadow:0 3px 20px #000!important}.about-copy p{color:#e2e6ed!important;font-size:16px!important;line-height:1.78!important}.values span{color:#e8ebf1!important;border-color:rgba(255,45,62,.55)!important;box-shadow:0 0 12px rgba(255,25,45,.08)!important}
+/* Real neon around services and reusable cards */
+.service-wide,.home-service-grid>a,.services-cta,.project-card,.portfolio-card,.extra-card,.collab-intro,.contact-aside,.project-form,.about-mini-card,.truth-box,.about-hero,.team-value,.about-cta{
+  border:1px solid rgba(255,40,58,.88)!important;
+  box-shadow:0 0 0 1px rgba(255,32,52,.10),0 0 15px rgba(255,20,40,.22),0 0 34px rgba(255,20,40,.09),0 22px 55px rgba(0,0,0,.42)!important;
+}
+.service-wide:hover,.home-service-grid>a:hover,.project-card:hover,.portfolio-card:hover,.extra-card:hover{
+  border-color:#ff4052!important;box-shadow:0 0 0 1px rgba(255,55,72,.2),0 0 20px rgba(255,24,45,.34),0 0 45px rgba(255,24,45,.14),0 28px 65px rgba(0,0,0,.48)!important;
+}
+.service-wide h2,.home-service-grid h3{color:#fff!important;text-shadow:0 2px 14px #000!important}.service-wide p,.home-service-grid p{color:#d7dbe2!important}.service-wide>b{color:#ff7b87!important}.service-wide>span{color:#ff4052!important}
+/* Packages: one coherent premium system instead of four unrelated colored boxes */
+.packages-page .pricing-grid{gap:22px!important}.pricing-vivid .price-card{
+  position:relative!important;padding:32px 34px 30px 38px!important;border:1px solid rgba(255,43,60,.80)!important;border-radius:20px!important;
+  background:linear-gradient(125deg,rgba(7,9,14,.97),rgba(13,10,14,.94))!important;
+  box-shadow:0 0 18px rgba(255,20,40,.16),0 28px 70px rgba(0,0,0,.48)!important;overflow:hidden!important;
+}
+.pricing-vivid .price-card::before{content:""!important;position:absolute!important;left:0!important;top:22px!important;bottom:22px!important;width:3px!important;height:auto!important;background:linear-gradient(180deg,transparent,#ff263d 18%,#ff263d 82%,transparent)!important;box-shadow:0 0 16px #ff263d!important}
+.pricing-vivid .price-card::after{content:"";position:absolute;right:-90px;top:-90px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,32,52,.11),transparent 66%);pointer-events:none}
+.pricing-vivid .price-card:hover{transform:translateY(-5px)!important;border-color:#ff4052!important;box-shadow:0 0 25px rgba(255,25,45,.28),0 34px 80px rgba(0,0,0,.52)!important}
+.pricing-vivid .price-kicker{color:#ff5363!important;font-size:11px!important}.pricing-vivid .price-card h3{font-size:31px!important;color:#fff!important}.pricing-vivid .price{font-size:42px!important;color:#fff!important}.pricing-vivid .one-time{color:#aeb5c0!important}.pricing-vivid .price-card li{color:#d4d8df!important}.pricing-vivid .price-card li::before{color:#ff4052!important}.pricing-vivid .price-foot{margin-top:24px!important;padding:12px 14px!important;border-radius:10px!important;background:rgba(255,255,255,.035)!important;color:#bfc5cf!important}.pricing-vivid .premium-extra,.pricing-vivid .commerce-extra{border-color:rgba(255,45,62,.42)!important;background:rgba(34,7,12,.55)!important;color:#cfd4dc!important}.pricing-vivid .premium-extra b,.pricing-vivid .commerce-extra b{color:#ff6976!important}
+/* Bottom home CTA rebuilt as compact premium bar */
+.home-contact{position:relative!important;margin-top:80px!important;margin-bottom:90px!important;padding:34px 38px!important;border:1px solid rgba(255,42,60,.88)!important;border-radius:20px!important;background:linear-gradient(110deg,rgba(5,8,13,.97),rgba(16,8,12,.93))!important;box-shadow:0 0 18px rgba(255,20,40,.20),0 26px 70px rgba(0,0,0,.48)!important;overflow:hidden!important}
+.home-contact::after{content:"";position:absolute;right:-60px;top:-90px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,35,55,.15),transparent 68%);pointer-events:none}.home-contact h2{font-size:clamp(34px,4vw,54px)!important;line-height:1.02!important;letter-spacing:-2px!important;color:#fff!important;margin:9px 0 12px!important}.home-contact p{color:#cbd1da!important;max-width:720px!important;line-height:1.7!important}.home-contact .btn{position:relative;z-index:2;box-shadow:0 0 22px rgba(255,30,50,.22)!important}
+/* Form text clarity everywhere */
+.form-section h3{color:#fff!important;text-shadow:0 2px 14px #000!important}.form-section>p,.field-note,.checkline{color:#c8ced8!important}.field label{color:#e5e8ee!important}.field input,.field select,.field textarea{color:#fff!important;background:rgba(5,8,13,.94)!important;border-color:#424b59!important}.field input::placeholder,.field textarea::placeholder{color:#8f98a6!important}
+@media(max-width:980px){body{background-image:linear-gradient(rgba(2,4,8,.42),rgba(2,3,6,.62)),url('assets/mholly-planet-4k.jpg')!important;background-size:auto 1250px!important;background-position:50% top!important;background-repeat:repeat-y!important;background-attachment:scroll!important}.about-copy{padding:22px!important}.about-copy p{font-size:15px!important}.home-contact{padding:25px 22px!important}.pricing-vivid .price-card{padding:25px 24px 24px 28px!important}}

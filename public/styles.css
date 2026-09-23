@@ -1221,3 +1221,30 @@ body{
 body{top:0!important;position:static!important}
 .goog-text-highlight{background:transparent!important;box-shadow:none!important}
 font[style*="vertical-align"]{background:transparent!important;box-shadow:none!important}
+
+
+/* ===== V10.1 LANGUAGE / MOBILE NAV STABILITY ===== */
+/* Translation may change word length, never the geometry of the header. */
+.site-header nav{align-items:center!important}
+.site-header nav>a,.mh-nav-services,.lang-switcher{flex:0 0 auto!important}
+.lang-switcher{position:relative!important;margin-left:2px!important;order:99!important}
+.lang-btn{width:78px!important;min-width:78px!important;height:38px!important;padding:0 9px!important;display:grid!important;grid-template-columns:22px 28px 12px!important;align-items:center!important;justify-content:center!important;gap:2px!important;white-space:nowrap!important}
+.lang-current-flag{font-size:16px!important;line-height:1!important}.lang-current-code{font-size:12px!important;font-weight:900!important;letter-spacing:.6px!important;text-align:center!important}.lang-arrow{font-size:12px!important;line-height:1!important}
+.lang-menu{width:250px!important}.lang-menu button{min-height:38px!important;display:flex!important;align-items:center!important;white-space:nowrap!important}
+/* Google Translate helper nodes must never occupy a menu/header slot. */
+.site-header nav>.skiptranslate,.site-header nav>[id^="goog-"],.site-header nav>iframe,.site-header nav>font:empty{display:none!important;width:0!important;height:0!important;margin:0!important;padding:0!important}
+
+@media(max-width:980px){
+  .site-header nav{display:none!important;flex-direction:column!important;align-items:stretch!important;gap:4px!important;padding:12px!important}
+  .site-header nav.open{display:flex!important}
+  .site-header nav>a,.site-header nav>.mh-nav-services,.site-header nav>.lang-switcher{width:100%!important;min-height:46px!important;margin:0!important;box-sizing:border-box!important}
+  .site-header nav>a{display:flex!important;align-items:center!important;padding:11px 13px!important;border-radius:10px!important;line-height:1.25!important}
+  .mh-nav-services{display:flex!important;align-items:stretch!important}
+  .mh-services-trigger{width:100%!important;min-height:46px!important;justify-content:space-between!important;padding:11px 13px!important;box-sizing:border-box!important}
+  .lang-switcher{order:99!important;min-height:46px!important}
+  .lang-btn{width:100%!important;min-width:0!important;height:46px!important;grid-template-columns:24px 1fr 16px!important;justify-content:stretch!important;padding:0 13px!important;text-align:left!important}
+  .lang-current-code{text-align:left!important;font-size:13px!important}.lang-arrow{text-align:right!important}
+  .lang-menu{position:static!important;width:100%!important;margin:5px 0 0!important;grid-template-columns:1fr 1fr!important;box-sizing:border-box!important}
+  .lang-menu button{width:100%!important;min-width:0!important}
+}
+@media(max-width:420px){.lang-menu{grid-template-columns:1fr!important}}

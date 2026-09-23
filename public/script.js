@@ -136,41 +136,68 @@ if(form && modal && confirmBtn){
   close?.addEventListener('click',()=>{overlay?.classList.remove('open');setTimeout(()=>{if(overlay)overlay.hidden=true},220);document.body.style.overflow=''});
 })();
 
-// V10.0 — language chooser translates the CURRENT page in place.
-// No redirect: dimensions, responsive layout and page structure stay unchanged.
+// V10.1 — stable manual language chooser.
+// German is always the default for a fresh browser session. A language changes only
+// after the visitor explicitly selects it. The selection is kept while navigating.
 (() => {
   const nav = document.querySelector('.site-header nav');
   if (!nav || document.querySelector('.lang-switcher')) return;
+
   const langs = [
-    ['de','🇩🇪','Deutsch'],['sv','🇸🇪','Svenska'],['en','🇬🇧','English'],['nl','🇧🇪','België'],
-    ['pt','🇵🇹','Português'],['es','🇪🇸','Español'],['it','🇮🇹','Italiano'],['pl','🇵🇱','Polski'],
-    ['nl','🇳🇱','Nederlands'],['fr','🇫🇷','Français'],['de','🇦🇹','Österreich'],['sk','🇸🇰','Slovenčina'],['cs','🇨🇿','Čeština']
+    ['de','🇩🇪','Deutsch'],['en','🇬🇧','English'],['sk','🇸🇰','Slovenčina'],['cs','🇨🇿','Čeština'],
+    ['pl','🇵🇱','Polski'],['fr','🇫🇷','Français'],['es','🇪🇸','Español'],['it','🇮🇹','Italiano'],
+    ['pt','🇵🇹','Português'],['nl','🇳🇱','Nederlands'],['sv','🇸🇪','Svenska']
   ];
-  const saved = localStorage.getItem('mholly-lang') || 'de';
-  const wrap=document.createElement('div'); wrap.className='lang-switcher';
-  wrap.innerHTML=`<button class="lang-btn" type="button" aria-label="Sprache wählen" aria-expanded="false">🌐 <span>${saved.toUpperCase()}</span>⌄</button><div class="lang-menu">${langs.map(([c,f,n])=>`<button type="button" data-lang="${c}"><span class="flag">${f}</span>${n}</button>`).join('')}</div>`;
+  const byCode = Object.fromEntries(langs.map(x=>[x[0],x]));
+  const saved = sessionStorage.getItem('mholly-lang') || 'de';
+  const initial = byCode[saved] ? saved : 'de';
+
+  const wrap=document.createElement('div');
+  wrap.className='lang-switcher';
+  wrap.setAttribute('translate','no');
+  wrap.classList.add('notranslate');
+  wrap.innerHTML=`<button class="lang-btn notranslate" translate="no" type="button" aria-label="Sprache wählen" aria-expanded="false"><span class="lang-current-flag">${byCode[initial][1]}</span><span class="lang-current-code">${initial.toUpperCase()}</span><span class="lang-arrow">⌄</span></button><div class="lang-menu notranslate" translate="no">${langs.map(([c,f,n])=>`<button type="button" data-lang="${c}" class="notranslate" translate="no"><span class="flag">${f}</span><span>${n}</span></button>`).join('')}</div>`;
   nav.appendChild(wrap);
+
   const btn=wrap.querySelector('.lang-btn');
-  const label=btn.querySelector('span');
-  btn.addEventListener('click',e=>{e.stopPropagation();wrap.classList.toggle('open');btn.setAttribute('aria-expanded',wrap.classList.contains('open'))});
+  const code=wrap.querySelector('.lang-current-code');
+  const flag=wrap.querySelector('.lang-current-flag');
+  const updateButton=(lang)=>{ const x=byCode[lang]||byCode.de; code.textContent=x[0].toUpperCase(); flag.textContent=x[1]; };
+  updateButton(initial);
+
+  btn.addEventListener('click',e=>{
+    e.preventDefault(); e.stopPropagation();
+    wrap.classList.toggle('open');
+    btn.setAttribute('aria-expanded',wrap.classList.contains('open')?'true':'false');
+  });
 
   const setGoogleLanguage=(lang, tries=0)=>{
     const combo=document.querySelector('.goog-te-combo');
-    if(!combo){ if(tries<40) setTimeout(()=>setGoogleLanguage(lang,tries+1),150); return; }
+    if(!combo){ if(tries<60) setTimeout(()=>setGoogleLanguage(lang,tries+1),120); return; }
     if(combo.value!==lang){
       combo.value=lang;
       combo.dispatchEvent(new Event('change',{bubbles:true}));
     }
   };
+
   const choose=(lang)=>{
-    localStorage.setItem('mholly-lang',lang);
-    label.textContent=lang.toUpperCase();
-    wrap.classList.remove('open'); btn.setAttribute('aria-expanded','false');
+    if(!byCode[lang]) lang='de';
+    sessionStorage.setItem('mholly-lang',lang);
+    updateButton(lang);
+    document.documentElement.lang=lang;
+    wrap.classList.remove('open');
+    btn.setAttribute('aria-expanded','false');
     setGoogleLanguage(lang);
   };
-  wrap.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>choose(b.dataset.lang)));
-  document.addEventListener('click',e=>{if(!wrap.contains(e.target)){wrap.classList.remove('open');btn.setAttribute('aria-expanded','false')}});
-  window.addEventListener('mholly-google-translate-ready',()=>setGoogleLanguage(saved));
-  setGoogleLanguage(saved);
-})();
 
+  wrap.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();choose(b.dataset.lang)}));
+  document.addEventListener('click',e=>{if(!wrap.contains(e.target)){wrap.classList.remove('open');btn.setAttribute('aria-expanded','false')}});
+
+  // Only restore a language that was explicitly selected during this browser session.
+  // A new session always starts in the original German version.
+  window.addEventListener('mholly-google-translate-ready',()=>{
+    updateButton(initial);
+    if(initial!=='de') setGoogleLanguage(initial);
+  });
+  if(initial!=='de') setGoogleLanguage(initial);
+})();

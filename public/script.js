@@ -135,3 +135,26 @@ if(form && modal && confirmBtn){
   });
   close?.addEventListener('click',()=>{overlay?.classList.remove('open');setTimeout(()=>{if(overlay)overlay.hidden=true},220);document.body.style.overflow=''});
 })();
+
+// V9.0 — explicit language chooser. No automatic browser-language redirect.
+(() => {
+  const nav = document.querySelector('.site-header nav');
+  if (!nav || document.querySelector('.lang-switcher')) return;
+  const langs = [
+    ['de','🇩🇪','Deutsch'],['sv','🇸🇪','Svenska'],['en','🇬🇧','English'],['nl','🇧🇪','België'],
+    ['pt','🇵🇹','Português'],['es','🇪🇸','Español'],['it','🇮🇹','Italiano'],['pl','🇵🇱','Polski'],
+    ['nl','🇳🇱','Nederlands'],['fr','🇫🇷','Français'],['de','🇦🇹','Österreich'],['sk','🇸🇰','Slovenčina'],['cs','🇨🇿','Čeština']
+  ];
+  const wrap=document.createElement('div'); wrap.className='lang-switcher';
+  wrap.innerHTML=`<button class="lang-btn" type="button" aria-label="Sprache wählen" aria-expanded="false">🌐 <span>DE</span>⌄</button><div class="lang-menu">${langs.map(([c,f,n])=>`<button type="button" data-lang="${c}"><span class="flag">${f}</span>${n}</button>`).join('')}</div>`;
+  nav.appendChild(wrap);
+  const btn=wrap.querySelector('.lang-btn');
+  btn.addEventListener('click',e=>{e.stopPropagation();wrap.classList.toggle('open');btn.setAttribute('aria-expanded',wrap.classList.contains('open'))});
+  wrap.querySelectorAll('[data-lang]').forEach(b=>b.addEventListener('click',()=>{
+    const lang=b.dataset.lang;
+    if(lang==='de'){ location.href=location.pathname+location.search; return; }
+    const source=location.href;
+    location.href='https://translate.google.com/translate?sl=de&tl='+encodeURIComponent(lang)+'&u='+encodeURIComponent(source);
+  }));
+  document.addEventListener('click',e=>{if(!wrap.contains(e.target)){wrap.classList.remove('open');btn.setAttribute('aria-expanded','false')}});
+})();

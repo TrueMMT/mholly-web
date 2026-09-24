@@ -19,6 +19,18 @@ const upload = multer({
 
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+// Frontend läuft auf mholly.dev, API auf dem Render-Webservice.
+app.use((req,res,next)=>{
+  const allowed = new Set(['https://mholly.dev','https://www.mholly.dev','https://mholly-web.onrender.com']);
+  const origin=req.headers.origin;
+  if(origin && allowed.has(origin)) res.setHeader('Access-Control-Allow-Origin',origin);
+  res.setHeader('Vary','Origin');
+  res.setHeader('Access-Control-Allow-Methods','POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers','Content-Type');
+  if(req.method==='OPTIONS') return res.sendStatus(204);
+  next();
+});
+app.get('/api/health', (_req,res)=>res.json({ok:true,service:'M.HOLLY mail API'}));
 app.use(express.static(PUBLIC));
 
 const esc = (s='') => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
@@ -36,13 +48,33 @@ const FIELD_MAP = [
   ['branche','Branche / Projektart'],
   ['paket','Gewünschtes Paket'],
   ['type','Art der Website'],
-  ['goal','Was soll die Website erreichen?'],
+  ['goal','Ziel der Website'],
   ['pages','Gewünschte Seiten / Bereiche'],
+  ['hosting','Hosting'],
+  ['domain','Domain'],
+  ['existing','Vorhandene Website / Domain'],
   ['colors','Farben / Stil'],
   ['deadline','Wunschtermin'],
   ['reference','Beispiel-Websites / Links'],
   ['message','Zusätzliche Informationen']
 ];
+
+
+const COLLAB_FIELD_MAP = [
+  ['name','Name / Firma'],
+  ['email','E-Mail'],
+  ['collabType','Art der Zusammenarbeit'],
+  ['link','Website / Social Media'],
+  ['offer','Was kann angeboten werden?'],
+  ['expectation','Erwartung an die Zusammenarbeit'],
+  ['message','Weitere Informationen']
+];
+
+function collaborationId(){
+  const d=new Date();
+  const date=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  return `MH-COL-${date}-${crypto.randomBytes(3).toString('hex').toUpperCase()}`;
+}
 
 function answers(body, file){
   const rows = FIELD_MAP.map(([key,label]) => ({ label, value: clean(body[key]) })).filter(r => r.value);
@@ -75,7 +107,7 @@ function emailShell({title, intro, id, rows, customer=false}){
           ${rowsHtml(rows)}
         </table>
       </td></tr>
-      ${customer?`<tr><td style="padding:0 28px 26px;color:#94949c;font-size:13px;line-height:1.6">Wir prüfen deine Anfrage und melden uns per E-Mail. Diese Nachricht bestätigt nur den Eingang deiner Anfrage und ist noch keine verbindliche Auftragsbestätigung.</td></tr>`:''}
+      ${customer?`<tr><td style="padding:0 28px 26px;color:#94949c;font-size:13px;line-height:1.6">Wir prüfen deine Anfrage und melden uns per E-Mail. Diese Nachricht bestätigt den Eingang deiner Anfrage. Sie ist noch keine verbindliche Auftragsbestätigung. Preis, Anzahlung, Restzahlung und Leistungsumfang werden erst mit dem später schriftlich bestätigten Angebot verbindlich.</td></tr>`:''}
       <tr><td align="center" style="padding:24px;border-top:1px solid #242429;background:#09090b"><img src="cid:mholly-logo" width="76" height="76" alt="M.HOLLY" style="display:block;border-radius:50%;margin:0 auto 10px"><div style="font-size:12px;font-weight:800;letter-spacing:1.5px;color:#fff">M.HOLLY</div><div style="margin-top:5px;font-size:10px;letter-spacing:1.4px;color:#777780">WEB DESIGN · DEVELOPMENT</div></td></tr>
     </table>
   </td></tr></table></body></html>`;
@@ -85,25 +117,37 @@ function plainText(title,id,rows){
   return `${title}\nBestellnummer: ${id}\n\n${rows.map(r=>`${r.label}:\n${r.value}`).join('\n\n')}\n\nM.HOLLY – Web Design & Development`;
 }
 
-async function brevoSend(payload){
+async function brevoSend(payload, attempts=2){
   const apiKey = process.env.BREVO_API_KEY;
   if (!apiKey) throw new Error('BREVO_API_KEY fehlt.');
-  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
-    method:'POST',
-    headers:{'accept':'application/json','content-type':'application/json','api-key':apiKey},
-    body:JSON.stringify(payload)
-  });
-  if (!response.ok){
-    const detail = await response.text();
-    throw new Error(`Brevo ${response.status}: ${detail}`);
+  let lastError;
+  for(let attempt=1; attempt<=attempts; attempt++){
+    try{
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),12000);
+      const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method:'POST',
+        headers:{'accept':'application/json','content-type':'application/json','api-key':apiKey},
+        body:JSON.stringify(payload),
+        signal:controller.signal
+      }).finally(()=>clearTimeout(timer));
+      if (!response.ok){
+        const detail = await response.text();
+        throw new Error(`Brevo ${response.status}: ${detail}`);
+      }
+      return await response.json();
+    }catch(err){
+      lastError=err;
+      if(attempt<attempts) await new Promise(r=>setTimeout(r,350));
+    }
   }
-  return response.json();
+  throw lastError;
 }
 
 app.post('/api/order', upload.single('attachment'), async (req,res) => {
   try{
     if (clean(req.body.website)) return res.status(200).json({ok:true}); // honeypot
-    const required = ['name','email','branche','paket','type','goal'];
+    const required = ['name','email','branche','paket','type','goal','hosting','domain'];
     if (required.some(k=>!clean(req.body[k]))) return res.status(400).json({ok:false,message:'Bitte alle Pflichtfelder ausfüllen.'});
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean(req.body.email))) return res.status(400).json({ok:false,message:'Ungültige E-Mail-Adresse.'});
     if (req.body.privacy !== 'yes' || req.body.rules !== 'yes') return res.status(400).json({ok:false,message:'Bestätigungen fehlen.'});
@@ -115,6 +159,8 @@ app.post('/api/order', upload.single('attachment'), async (req,res) => {
 
     const id = orderId();
     const rows = answers(req.body, req.file);
+    rows.unshift({label:'Eingang',value:new Intl.DateTimeFormat('de-DE',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Berlin'}).format(new Date())});
+    rows.push({label:'Hinweis zum Ablauf',value:'Die Anfrage ist unverbindlich. Bei späterer Auftragsbestätigung gelten Preis, Anzahlung, Restzahlung und Leistungsumfang gemäß dem schriftlich bestätigten Angebot.'});
     const logoUrl = siteUrl ? `${siteUrl}/assets/mholly-logo.png` : '';
     const shell = (opts) => emailShell(opts).replace(
       '<img src="cid:mholly-logo" width="76" height="76"',
@@ -125,7 +171,7 @@ app.post('/api/order', upload.single('attachment'), async (req,res) => {
       sender:{name:'M.HOLLY Bestellung',email:senderEmail},
       to:[{email:admin,name:'M.HOLLY'}],
       replyTo:{email:clean(req.body.email),name:clean(req.body.name)},
-      subject:`Neue Bestellung M.HOLLY – #${id}`,
+      subject:`Neue Projektanfrage M.HOLLY – ${id}`,
       textContent:plainText('Neue Projektanfrage',id,rows),
       htmlContent:shell({title:'Neue Projektanfrage',intro:'Ein Kunde hat eine neue Anfrage über die M.HOLLY Website gesendet.',id,rows})
     };
@@ -138,7 +184,7 @@ app.post('/api/order', upload.single('attachment'), async (req,res) => {
       sender:{name:'M.HOLLY',email:senderEmail},
       to:[{email:clean(req.body.email),name:clean(req.body.name)}],
       replyTo:{email:admin,name:'M.HOLLY'},
-      subject:`Deine Anfrage bei M.HOLLY – #${id}`,
+      subject:`Deine M.HOLLY Projektanfrage – ${id}`,
       textContent:plainText('Danke für deine Anfrage',id,rows),
       htmlContent:shell({title:'Danke für deine Anfrage',intro:`Hallo ${clean(req.body.name)}, wir haben deine Projektanfrage erhalten. Unten findest du deine Angaben als Zusammenfassung.`,id,rows,customer:true})
     });
@@ -148,6 +194,32 @@ app.post('/api/order', upload.single('attachment'), async (req,res) => {
     console.error('ORDER_MAIL_ERROR', err);
     res.status(500).json({ok:false,message:'Die Anfrage konnte nicht gesendet werden.'});
   }
+});
+
+
+app.post('/api/collaboration', upload.single('attachment'), async (req,res) => {
+  try{
+    if(clean(req.body.website)) return res.status(200).json({ok:true});
+    const required=['name','email','collabType','offer','expectation'];
+    if(required.some(k=>!clean(req.body[k]))) return res.status(400).json({ok:false,message:'Bitte alle Pflichtfelder ausfüllen.'});
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean(req.body.email))) return res.status(400).json({ok:false,message:'Ungültige E-Mail-Adresse.'});
+    if(req.body.privacy!=='yes') return res.status(400).json({ok:false,message:'Datenschutzbestätigung fehlt.'});
+    if(!process.env.BREVO_API_KEY) return res.status(503).json({ok:false,message:'E-Mail-Versand ist noch nicht konfiguriert.'});
+    const senderEmail=process.env.SENDER_EMAIL||'mholly.development@gmail.com';
+    const admin=process.env.ADMIN_EMAIL||'mholly.development@gmail.com';
+    const siteUrl=(process.env.SITE_URL||'').replace(/\/$/,'');
+    const id=collaborationId();
+    const rows=COLLAB_FIELD_MAP.map(([key,label])=>({label,value:clean(req.body[key])})).filter(r=>r.value);
+    if(req.file) rows.push({label:'Angehängte Datei',value:req.file.originalname});
+    rows.unshift({label:'Eingang',value:new Intl.DateTimeFormat('de-DE',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Berlin'}).format(new Date())});
+    const logoUrl=siteUrl?`${siteUrl}/assets/mholly-logo.png`:'';
+    const shell=(opts)=>emailShell(opts).replace('<img src="cid:mholly-logo" width="76" height="76"',logoUrl?`<img src="${esc(logoUrl)}" width="76" height="76"`:'<div style="font-size:22px;font-weight:900;color:#fff">M.HOLLY</div><img src="" width="0" height="0"');
+    const adminPayload={sender:{name:'M.HOLLY Zusammenarbeit',email:senderEmail},to:[{email:admin,name:'M.HOLLY'}],replyTo:{email:clean(req.body.email),name:clean(req.body.name)},subject:`Neue Zusammenarbeitsanfrage – ${id}`,textContent:plainText('Neue Zusammenarbeitsanfrage',id,rows),htmlContent:shell({title:'Neue Zusammenarbeitsanfrage',intro:'Eine neue Anfrage zur Zusammenarbeit wurde über die M.HOLLY Website gesendet.',id,rows})};
+    if(req.file) adminPayload.attachment=[{name:req.file.originalname,content:req.file.buffer.toString('base64')}];
+    await brevoSend(adminPayload);
+    await brevoSend({sender:{name:'M.HOLLY',email:senderEmail},to:[{email:clean(req.body.email),name:clean(req.body.name)}],replyTo:{email:admin,name:'M.HOLLY'},subject:`Deine Anfrage zur Zusammenarbeit – ${id}`,textContent:plainText('Danke für deine Anfrage zur Zusammenarbeit',id,rows),htmlContent:shell({title:'Danke für deine Anfrage',intro:`Hallo ${clean(req.body.name)}, wir haben deine Anfrage zur Zusammenarbeit erhalten. Unten findest du deine Angaben als Zusammenfassung.`,id,rows,customer:true})});
+    res.json({ok:true,orderId:id});
+  }catch(err){console.error('COLLAB_MAIL_ERROR',err);res.status(500).json({ok:false,message:'Die Anfrage konnte nicht gesendet werden.'});}
 });
 
 app.use((err,_req,res,_next)=>{

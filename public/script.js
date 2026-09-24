@@ -211,3 +211,40 @@ if(form && modal && confirmBtn){
     hardTimer=setTimeout(()=>{obs.disconnect();finish()},2600);
   },true);
 })();
+
+/* ===== V11.4 TRANSLATION-SAFE HERO =====
+   Keep the hero shell the same size in every language and fit only the translated
+   headline inside its reserved area. GTranslate replaces text asynchronously,
+   therefore a MutationObserver refits after each language change. */
+(function(){
+  const hero = document.querySelector('.hero.hero-v2');
+  const title = hero && hero.querySelector('h1');
+  if(!hero || !title) return;
+
+  let fitting = false;
+  function fitHeroTitle(){
+    if(fitting) return;
+    fitting = true;
+    const mobile = window.matchMedia('(max-width: 980px)').matches;
+    const min = mobile ? 34 : 48;
+    const max = mobile ? Math.min(58, Math.max(44, window.innerWidth * 0.122)) : 78;
+    const limit = mobile ? 245 : 305;
+    let size = max;
+    title.style.setProperty('font-size', size + 'px', 'important');
+    title.style.setProperty('line-height', mobile ? '.98' : '.96', 'important');
+    while(title.getBoundingClientRect().height > limit && size > min){
+      size -= 1;
+      title.style.setProperty('font-size', size + 'px', 'important');
+    }
+    fitting = false;
+  }
+
+  let timer;
+  function scheduleFit(){ clearTimeout(timer); timer=setTimeout(fitHeroTitle, 80); }
+  fitHeroTitle();
+  window.addEventListener('resize', scheduleFit, {passive:true});
+  new MutationObserver(scheduleFit).observe(title,{subtree:true,childList:true,characterData:true});
+  const lang = document.querySelector('.gtranslate_wrapper');
+  if(lang) new MutationObserver(scheduleFit).observe(lang,{subtree:true,childList:true,attributes:true});
+  document.addEventListener('change', e=>{ if(e.target.closest && e.target.closest('.gtranslate_wrapper')) scheduleFit(); });
+})();

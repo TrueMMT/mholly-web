@@ -1380,3 +1380,24 @@ body.mh-language-switching::after{
   }
 }
 @media (prefers-reduced-motion:reduce){body{animation:none!important}}
+
+/* ===== V11.4 LANGUAGE-STABLE LAYOUT =====
+   Translation may change text length, but must not resize the visual shell. */
+.hero.hero-v2 .hero-copy{min-width:0!important}
+.hero.hero-v2 h1{overflow-wrap:normal!important;word-break:normal!important;text-wrap:balance}
+.site-header nav>a,.site-header nav button,.site-header nav select{white-space:nowrap}
+.card,.price-card,.project-card,.extra-card{min-width:0}
+.card p,.price-card p,.project-card p,.extra-card p{overflow-wrap:break-word}
+
+@media (min-width:981px){
+  .hero.hero-v2{height:650px!important;min-height:650px!important;max-height:650px!important;overflow:hidden!important;align-items:center!important}
+  .hero.hero-v2 .hero-copy{align-self:center!important}
+  .hero.hero-v2 h1{font-size:78px!important;line-height:.96!important;letter-spacing:-3.4px!important;max-width:760px!important}
+  .hero.hero-v2 .hero-copy>p{max-width:700px!important}
+}
+
+@media (max-width:980px){
+  .site-header nav.open{gap:8px!important}
+  .site-header nav.open>*{margin-top:0!important;margin-bottom:0!important}
+  .hero.hero-v2 h1{min-height:0!important;max-width:100%!important}
+}

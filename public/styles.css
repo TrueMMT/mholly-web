@@ -1346,4 +1346,37 @@ body.mh-language-switching::after{
  .packages-page .price small{font-size:11px!important}
  .packages-page .one-time{font-size:10px!important;letter-spacing:.5px!important}
 }
-\n\n/* V11.2 — subtle living planet effect. Keeps the original 4K background and layout unchanged. */\n@media (min-width:981px) and (prefers-reduced-motion:no-preference){\n  body{animation:mhollyPlanetDrift 38s ease-in-out infinite alternate!important}\n  @keyframes mhollyPlanetDrift{\n    from{background-position:50% top!important}\n    to{background-position:53% top!important}\n  }\n}\n@media (prefers-reduced-motion:reduce){body{animation:none!important}}\n
+
+
+/* V11.3 — desktop hero balance + clearly visible living planet motion */
+@media (min-width:981px){
+  .hero.hero-v2{
+    min-height:640px!important;
+    padding-top:62px!important;
+    padding-bottom:54px!important;
+  }
+  .hero.hero-v2 .hero-copy{max-width:760px!important}
+  .hero.hero-v2 h1{
+    font-size:clamp(48px,5.25vw,78px)!important;
+    line-height:.96!important;
+    letter-spacing:-3.4px!important;
+    margin:24px 0!important;
+  }
+  .hero.hero-v2 .hero-copy>p{
+    font-size:17px!important;
+    line-height:1.58!important;
+    max-width:700px!important;
+  }
+}
+
+@media (min-width:981px) and (prefers-reduced-motion:no-preference){
+  body{
+    animation:mhollyPlanetMove 18s ease-in-out infinite alternate!important;
+    will-change:background-position,background-size;
+  }
+  @keyframes mhollyPlanetMove{
+    0%{background-position:47% top!important;background-size:cover!important}
+    100%{background-position:55% top!important;background-size:106% auto!important}
+  }
+}
+@media (prefers-reduced-motion:reduce){body{animation:none!important}}

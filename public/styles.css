@@ -1401,3 +1401,22 @@ body.mh-language-switching::after{
   .site-header nav.open>*{margin-top:0!important;margin-bottom:0!important}
   .hero.hero-v2 h1{min-height:0!important;max-width:100%!important}
 }
+
+/* ===== V11.5 FIXED LANGUAGE GEOMETRY =====
+   Translations may change words, never the dimensions of the hero/navigation. */
+@media (min-width:981px){
+  .hero.hero-v2{height:650px!important;min-height:650px!important;max-height:650px!important;padding-top:52px!important;padding-bottom:46px!important}
+  .hero.hero-v2 .hero-copy{width:700px!important;max-width:700px!important}
+  .hero.hero-v2 h1{font-size:58px!important;line-height:.98!important;letter-spacing:-2.7px!important;max-width:700px!important;margin:20px 0!important;text-wrap:balance!important}
+  .hero.hero-v2 .hero-outline{font-size:.72em!important;line-height:1.02!important}
+  .hero.hero-v2 .hero-copy>p{font-size:16px!important;line-height:1.55!important;max-width:690px!important}
+  .site-header nav{min-height:64px!important;align-items:center!important}
+  .site-header nav>*{flex-shrink:0!important}
+}
+@media (max-width:980px){
+  .hero.hero-v2{height:auto!important;min-height:0!important;max-height:none!important}
+  .hero.hero-v2 h1{font-size:clamp(36px,10.2vw,46px)!important;line-height:1!important;letter-spacing:-1.8px!important;margin:24px 0 18px!important;text-wrap:balance!important}
+  .hero.hero-v2 .hero-outline{font-size:1em!important;line-height:1!important}
+  .site-header nav.open{gap:7px!important}
+  .site-header nav.open>*{flex:0 0 auto!important;min-height:48px!important}
+}

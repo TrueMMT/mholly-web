@@ -96,6 +96,7 @@ function emailShell({title, intro, id, rows, customer=false}){
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:760px;background:#0c0c0f;border:1px solid #2d2d33;border-radius:18px;overflow:hidden;box-shadow:0 20px 70px rgba(0,0,0,.45)">
       <tr><td style="height:4px;background:linear-gradient(90deg,#8f0d18,#ff3342,#8f0d18)"></td></tr>
       <tr><td style="padding:28px 28px 16px">
+        <table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 0 18px"><tr><td style="padding-right:14px;vertical-align:middle"><img src="https://mholly.dev/assets/mholly-logo.png" width="72" height="72" alt="M.HOLLY" style="display:block;width:72px;height:72px;border:0;border-radius:50%;object-fit:cover"></td><td style="vertical-align:middle"><div style="font-size:18px;line-height:1.1;color:#fff;font-weight:900;letter-spacing:1.4px">M.HOLLY</div><div style="margin-top:6px;font-size:10px;letter-spacing:1.7px;color:#8f8f98">WEB DESIGN · DEVELOPMENT</div></td></tr></table>
         <div style="font-size:11px;letter-spacing:2px;color:#ff4a55;font-weight:800">M.HOLLY · WEB DESIGN & DEVELOPMENT</div>
         <h1 style="margin:10px 0 8px;font-size:28px;line-height:1.15;color:#fff">${esc(title)}</h1>
         <p style="margin:0;color:#aaaab2;font-size:14px;line-height:1.65">${esc(intro)}</p>
@@ -108,7 +109,7 @@ function emailShell({title, intro, id, rows, customer=false}){
         </table>
       </td></tr>
       ${customer?`<tr><td style="padding:0 28px 26px;color:#94949c;font-size:13px;line-height:1.6">Wir prüfen deine Anfrage und melden uns per E-Mail. Diese Nachricht bestätigt den Eingang deiner Anfrage. Sie ist noch keine verbindliche Auftragsbestätigung. Preis, Anzahlung, Restzahlung und Leistungsumfang werden erst mit dem später schriftlich bestätigten Angebot verbindlich.</td></tr>`:''}
-      <tr><td align="center" style="padding:24px;border-top:1px solid #242429;background:#09090b"><img src="cid:mholly-logo" width="76" height="76" alt="M.HOLLY" style="display:block;border-radius:50%;margin:0 auto 10px"><div style="font-size:12px;font-weight:800;letter-spacing:1.5px;color:#fff">M.HOLLY</div><div style="margin-top:5px;font-size:10px;letter-spacing:1.4px;color:#777780">WEB DESIGN · DEVELOPMENT</div></td></tr>
+      <tr><td align="center" style="padding:24px;border-top:1px solid #242429;background:#09090b"><img src="https://mholly.dev/assets/mholly-logo.png" width="76" height="76" alt="M.HOLLY" style="display:block;border-radius:50%;margin:0 auto 10px"><div style="font-size:12px;font-weight:800;letter-spacing:1.5px;color:#fff">M.HOLLY</div><div style="margin-top:5px;font-size:10px;letter-spacing:1.4px;color:#777780">WEB DESIGN · DEVELOPMENT</div></td></tr>
     </table>
   </td></tr></table></body></html>`;
 }
@@ -154,7 +155,7 @@ app.post('/api/order', upload.single('attachment'), async (req,res) => {
 
     const senderEmail = process.env.SENDER_EMAIL || 'mholly.development@gmail.com';
     const admin = process.env.ADMIN_EMAIL || 'mholly.development@gmail.com';
-    const siteUrl = (process.env.SITE_URL || '').replace(/\/$/,'');
+    const siteUrl = (process.env.SITE_URL || 'https://mholly.dev').replace(/\/$/,'');
     if (!process.env.BREVO_API_KEY) return res.status(503).json({ok:false,message:'E-Mail-Versand ist noch nicht konfiguriert.'});
 
     const id = orderId();
@@ -163,7 +164,7 @@ app.post('/api/order', upload.single('attachment'), async (req,res) => {
     rows.push({label:'Hinweis zum Ablauf',value:'Die Anfrage ist unverbindlich. Bei späterer Auftragsbestätigung gelten Preis, Anzahlung, Restzahlung und Leistungsumfang gemäß dem schriftlich bestätigten Angebot.'});
     const logoUrl = siteUrl ? `${siteUrl}/assets/mholly-logo.png` : '';
     const shell = (opts) => emailShell(opts).replace(
-      '<img src="cid:mholly-logo" width="76" height="76"',
+      '<img src="https://mholly.dev/assets/mholly-logo.png" width="76" height="76"',
       logoUrl ? `<img src="${esc(logoUrl)}" width="76" height="76"` : '<div style="font-size:22px;font-weight:900;color:#fff">M.HOLLY</div><img src="" width="0" height="0"'
     );
 
@@ -207,13 +208,13 @@ app.post('/api/collaboration', upload.single('attachment'), async (req,res) => {
     if(!process.env.BREVO_API_KEY) return res.status(503).json({ok:false,message:'E-Mail-Versand ist noch nicht konfiguriert.'});
     const senderEmail=process.env.SENDER_EMAIL||'mholly.development@gmail.com';
     const admin=process.env.ADMIN_EMAIL||'mholly.development@gmail.com';
-    const siteUrl=(process.env.SITE_URL||'').replace(/\/$/,'');
+    const siteUrl=(process.env.SITE_URL||'https://mholly.dev').replace(/\/$/,'');
     const id=collaborationId();
     const rows=COLLAB_FIELD_MAP.map(([key,label])=>({label,value:clean(req.body[key])})).filter(r=>r.value);
     if(req.file) rows.push({label:'Angehängte Datei',value:req.file.originalname});
     rows.unshift({label:'Eingang',value:new Intl.DateTimeFormat('de-DE',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/Berlin'}).format(new Date())});
     const logoUrl=siteUrl?`${siteUrl}/assets/mholly-logo.png`:'';
-    const shell=(opts)=>emailShell(opts).replace('<img src="cid:mholly-logo" width="76" height="76"',logoUrl?`<img src="${esc(logoUrl)}" width="76" height="76"`:'<div style="font-size:22px;font-weight:900;color:#fff">M.HOLLY</div><img src="" width="0" height="0"');
+    const shell=(opts)=>emailShell(opts).replace('<img src="https://mholly.dev/assets/mholly-logo.png" width="76" height="76"',logoUrl?`<img src="${esc(logoUrl)}" width="76" height="76"`:'<div style="font-size:22px;font-weight:900;color:#fff">M.HOLLY</div><img src="" width="0" height="0"');
     const adminPayload={sender:{name:'M.HOLLY Zusammenarbeit',email:senderEmail},to:[{email:admin,name:'M.HOLLY'}],replyTo:{email:clean(req.body.email),name:clean(req.body.name)},subject:`Neue Zusammenarbeitsanfrage – ${id}`,textContent:plainText('Neue Zusammenarbeitsanfrage',id,rows),htmlContent:shell({title:'Neue Zusammenarbeitsanfrage',intro:'Eine neue Anfrage zur Zusammenarbeit wurde über die M.HOLLY Website gesendet.',id,rows})};
     if(req.file) adminPayload.attachment=[{name:req.file.originalname,content:req.file.buffer.toString('base64')}];
     await brevoSend(adminPayload);

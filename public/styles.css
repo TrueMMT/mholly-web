@@ -1436,3 +1436,27 @@ body>*{visibility:visible!important}
 @media(max-width:980px){
   main,section,header,footer,.hero,.hero-copy,.hero-mark,.page,.site-header{opacity:1!important;visibility:visible!important;transform:none!important}
 }
+
+/* ===== V12.0 PERFORMANCE — reduced glass blur, same geometry =====
+   Keep the glass look on desktop with cheaper blur radii.
+   Disable backdrop blur on phones/tablets where it is most expensive. */
+@media (min-width: 981px){
+  .site-header{backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important}
+  .services-menu{backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important}
+  .modal,.success-overlay{backdrop-filter:blur(4px)!important;-webkit-backdrop-filter:blur(4px)!important}
+  .hero-badge{backdrop-filter:blur(5px)!important;-webkit-backdrop-filter:blur(5px)!important}
+  .hero-trust span{backdrop-filter:blur(4px)!important;-webkit-backdrop-filter:blur(4px)!important}
+  .story{backdrop-filter:blur(5px)!important;-webkit-backdrop-filter:blur(5px)!important}
+  .page-head,.home-services-head{backdrop-filter:blur(2px)!important;-webkit-backdrop-filter:blur(2px)!important}
+}
+@media (max-width: 980px){
+  .site-header,.site-header nav,.services-menu,.modal,.success-overlay,
+  .hero.hero-v2,.hero-badge,.hero-trust span,.story,.page-head,.home-services-head{
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+  /* Preserve the dark glass appearance without live background compositing. */
+  .hero-badge{background:rgba(8,8,11,.88)!important}
+  .hero-trust span{background:rgba(4,6,10,.88)!important}
+  .page-head,.home-services-head{background:linear-gradient(180deg,rgba(3,6,11,.96),rgba(3,6,11,.90))!important}
+}

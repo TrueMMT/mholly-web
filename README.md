@@ -1,5 +1,7 @@
-M.HOLLY V10.5
-- German remains default; manual language selector retained.
-- Added a mobile-only "Link kopieren" button inside the hamburger navigation.
-- Copies the exact current page URL using Clipboard API, with legacy copy and prompt fallback.
-- Browser address-bar lock icon is browser UI and cannot be changed by website code.
+M.HOLLY V12.2 — MOBILE BACKDROP HARD-OFF
+
+- Based on V12.1.
+- On screens <= 980px all backdrop-filter / -webkit-backdrop-filter effects are force-disabled, including pseudo-elements.
+- Replaced only transparency where needed with darker fills so layout/geometry is unchanged.
+- Desktop glass effects are untouched.
+- Forms, languages, backend/Brevo and email branding are unchanged.

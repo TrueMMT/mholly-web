@@ -1420,3 +1420,11 @@ body.mh-language-switching::after{
   .site-header nav.open{gap:7px!important}
   .site-header nav.open>*{flex:0 0 auto!important;min-height:48px!important}
 }
+
+
+/* ===== V11.7 INSTANT LOAD / NO DISAPPEARING CONTENT ===== */
+/* Content is always visible. We prefer stable rendering over entrance effects. */
+.reveal,.reveal.visible{opacity:1!important;transform:none!important;transition:none!important}
+html.mh-translation-loading body::before,body.mh-language-switching::before,
+html.mh-translation-loading body::after,body.mh-language-switching::after{display:none!important;content:none!important}
+html.mh-translation-loading body,body.mh-language-switching{visibility:visible!important;opacity:1!important}

@@ -1581,3 +1581,37 @@ body>*{visibility:visible!important}
     background:#0b0b0e!important;
   }
 }
+
+/* ===== V12.5 CHROME ANDROID SAFE RENDERER =====
+   Chrome/Android can show stale tiles with large scrolling backgrounds and
+   composited effects. This path keeps the same layout but uses a simpler paint tree. */
+@media (max-width:980px), (hover:none) and (pointer:coarse){
+  html.chrome-android,html.chrome-android body{background:#03060b!important}
+  html.chrome-android body{
+    background-image:none!important;
+    background-attachment:scroll!important;
+  }
+  html.chrome-android .hero.hero-v2{
+    background-image:linear-gradient(180deg,rgba(3,6,11,.70),rgba(3,6,11,.94)),url('assets/mholly-planet-bg-hd.webp')!important;
+    background-size:cover!important;
+    background-position:center top!important;
+    background-repeat:no-repeat!important;
+  }
+  html.chrome-android .site-header,
+  html.chrome-android .mh-services-popover{
+    contain:none!important;
+  }
+  html.chrome-android *,html.chrome-android *::before,html.chrome-android *::after{
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+  html.chrome-android .ambient,html.chrome-android .embers,html.chrome-android .bg-grid,
+  html.chrome-android .ember{display:none!important}
+  html.chrome-android .hero-mark img,html.chrome-android .logo-orbit{
+    animation:none!important;will-change:auto!important;filter:none!important;
+  }
+  html.chrome-android main,html.chrome-android section,html.chrome-android header,
+  html.chrome-android footer,html.chrome-android .page,html.chrome-android .hero{
+    will-change:auto!important;transform:none!important;
+  }
+}

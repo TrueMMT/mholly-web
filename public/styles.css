@@ -957,7 +957,7 @@ input,select,textarea,button{max-width:100%}
 body{background:radial-gradient(circle at 70% 0%,#0b1725 0,#050609 34%,#040405 72%);font-family:Inter,"Segoe UI",Arial,sans-serif;letter-spacing:.01em}.bg-grid{opacity:.25;background-size:96px 96px}.ambient{opacity:.45}.embers{opacity:.45}
 .site-header{width:min(var(--max),calc(100% - 34px));min-height:76px;margin:14px auto 0;border-radius:16px;border:1px solid rgba(160,175,195,.18);background:linear-gradient(180deg,rgba(12,15,21,.94),rgba(6,8,12,.91));box-shadow:0 20px 65px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.035);padding:0 14px}.site-header::before{left:18px;right:18px;background:linear-gradient(90deg,transparent,rgba(227,19,36,.75),rgba(90,169,255,.45),transparent)}.brand{min-width:220px}.brand img{width:48px;height:48px;border-radius:11px}.brand-copy strong{font-size:17px;letter-spacing:2px}.brand-copy small{font-size:8px;color:#8f98a6}.site-header nav{gap:22px}.site-header nav>a:not(.nav-cta){padding:29px 0}.site-header nav>a:not(.nav-cta)::after{bottom:18px}.nav-cta{border-color:rgba(227,19,36,.38);background:linear-gradient(180deg,#1a1115,#100b0d);box-shadow:0 0 22px rgba(227,19,36,.08)}
 .lang-switcher{position:relative;margin-left:2px}.lang-btn{height:38px;min-width:52px;padding:0 10px;border:1px solid #303641;border-radius:10px;background:#0c0f14;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;font-size:15px}.lang-btn:hover{border-color:#5b6675}.lang-menu{position:absolute;right:0;top:48px;width:245px;padding:8px;background:rgba(7,9,13,.98);border:1px solid #2d333e;border-radius:14px;box-shadow:0 24px 70px #000;display:none;grid-template-columns:1fr 1fr;gap:5px;z-index:10000}.lang-switcher.open .lang-menu{display:grid}.lang-menu button{border:0;border-radius:9px;background:transparent;color:#b8bec8;padding:9px 10px;text-align:left;cursor:pointer;font-size:12px}.lang-menu button:hover{background:#141923;color:#fff}.lang-menu .flag{font-size:15px;margin-right:6px}
-.hero.hero-v2{position:relative;width:min(var(--max),calc(100% - 34px));min-height:720px;margin:18px auto 0;padding:76px 7%;display:flex;align-items:center;overflow:hidden;border:1px solid rgba(160,175,195,.16);border-radius:22px;background:linear-gradient(90deg,rgba(2,3,6,.94) 0%,rgba(2,3,6,.82) 37%,rgba(2,3,6,.2) 72%,rgba(2,3,6,.08) 100%),url('assets/mholly-world-hero.png') center/cover no-repeat;box-shadow:0 35px 100px rgba(0,0,0,.55)}.hero.hero-v2::after{content:"";position:absolute;inset:auto 0 0;height:180px;background:linear-gradient(transparent,rgba(4,4,5,.92));pointer-events:none}.hero-copy{position:relative;z-index:2;max-width:720px}.hero-mark{display:none}.hero-badge{display:inline-flex;border:1px solid rgba(227,19,36,.38);background:rgba(8,8,11,.58);backdrop-filter:blur(10px);border-radius:999px;padding:9px 13px;color:#cbd1d9;font-size:10px;letter-spacing:1.8px}.hero h1{font-size:clamp(52px,5.6vw,88px);letter-spacing:-3.8px;line-height:.96;margin:25px 0;text-shadow:0 8px 35px #000}.hero h1 em{background:linear-gradient(90deg,#fff,#bfc8d5);-webkit-background-clip:text;color:transparent}.hero-outline{font-size:.68em;letter-spacing:-2px;color:#ff3144;-webkit-text-stroke:0}.hero p{max-width:650px;color:#c0c6cf;font-size:16px;line-height:1.8;text-shadow:0 2px 15px #000}.hero-trust{position:relative;z-index:2}.hero-trust span{background:rgba(4,6,10,.62);border-color:rgba(255,255,255,.1);backdrop-filter:blur(9px)}
+.hero.hero-v2{position:relative;width:min(var(--max),calc(100% - 34px));min-height:720px;margin:18px auto 0;padding:76px 7%;display:flex;align-items:center;overflow:hidden;border:1px solid rgba(160,175,195,.16);border-radius:22px;background:linear-gradient(90deg,rgba(2,3,6,.94) 0%,rgba(2,3,6,.82) 37%,rgba(2,3,6,.2) 72%,rgba(2,3,6,.08) 100%),url('assets/mholly-world-hero.webp') center/cover no-repeat;box-shadow:0 35px 100px rgba(0,0,0,.55)}.hero.hero-v2::after{content:"";position:absolute;inset:auto 0 0;height:180px;background:linear-gradient(transparent,rgba(4,4,5,.92));pointer-events:none}.hero-copy{position:relative;z-index:2;max-width:720px}.hero-mark{display:none}.hero-badge{display:inline-flex;border:1px solid rgba(227,19,36,.38);background:rgba(8,8,11,.58);backdrop-filter:blur(10px);border-radius:999px;padding:9px 13px;color:#cbd1d9;font-size:10px;letter-spacing:1.8px}.hero h1{font-size:clamp(52px,5.6vw,88px);letter-spacing:-3.8px;line-height:.96;margin:25px 0;text-shadow:0 8px 35px #000}.hero h1 em{background:linear-gradient(90deg,#fff,#bfc8d5);-webkit-background-clip:text;color:transparent}.hero-outline{font-size:.68em;letter-spacing:-2px;color:#ff3144;-webkit-text-stroke:0}.hero p{max-width:650px;color:#c0c6cf;font-size:16px;line-height:1.8;text-shadow:0 2px 15px #000}.hero-trust{position:relative;z-index:2}.hero-trust span{background:rgba(4,6,10,.62);border-color:rgba(255,255,255,.1);backdrop-filter:blur(9px)}
 .home-services,.story,.home-contact,.page.wide{width:min(var(--max),calc(100% - 34px))}.home-services{padding-top:110px}.home-services-head h2,.story h2,.extras h2,.collab-intro h2,.about-copy h2{letter-spacing:-2px}.home-service-grid{gap:14px}.home-service-grid>a,.team-value,.collab-intro,.contact-aside,.project-form,.about-mini-card,.truth-box{background:linear-gradient(145deg,rgba(15,18,25,.94),rgba(7,9,13,.96));border:1px solid rgba(150,165,185,.15);box-shadow:inset 0 1px rgba(255,255,255,.025),0 18px 45px rgba(0,0,0,.18)}.home-service-grid>a:hover{border-color:rgba(227,19,36,.45);transform:translateY(-4px);box-shadow:0 20px 55px rgba(0,0,0,.35),0 0 25px rgba(227,19,36,.08)}
 .page-head{max-width:980px;padding-top:80px}.page-head h1{font-size:clamp(52px,6vw,88px);letter-spacing:-4px}.page-head p{max-width:840px;color:#aeb5bf;line-height:1.8}
 .pricing-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important;align-items:stretch!important}.price-card{min-height:0!important;padding:28px!important;border-radius:16px!important;background:linear-gradient(145deg,#0d1016,#07090d)!important;border:1px solid #252b35!important;box-shadow:0 22px 55px rgba(0,0,0,.28)!important;overflow:hidden}.price-card::before{height:1px!important;background:linear-gradient(90deg,transparent,rgba(185,194,206,.38),transparent)!important}.price-card:hover{transform:translateY(-4px)!important;border-color:#414b5a!important}.price-card.featured{border-color:rgba(227,19,36,.42)!important;box-shadow:0 22px 55px rgba(0,0,0,.3),0 0 28px rgba(227,19,36,.07)!important}.price-card h3{font-size:28px!important}.price{font-size:36px!important}.price-card ul{display:grid;grid-template-columns:1fr 1fr;gap:8px 22px}.price-card li{font-size:13px!important;line-height:1.5!important}.price-kicker,.one-time{color:#8f9aaa!important}.tier-essential .price-kicker,.tier-signature .price-kicker{color:#aab3bf!important}.tier-professional .price-kicker,.tier-commerce .price-kicker{color:#ff5360!important}
@@ -972,7 +972,7 @@ html{background:#030509!important}
 body{
   background:
     linear-gradient(rgba(3,5,9,.68),rgba(3,5,9,.82)),
-    url('assets/mholly-planet-bg.jpg') center top/cover fixed no-repeat!important;
+    url('assets/mholly-planet-bg.webp') center top/cover fixed no-repeat!important;
   min-height:100vh;
 }
 /* Keep the planet as a continuous site atmosphere instead of a boxed hero image. */
@@ -1010,7 +1010,7 @@ body{
 body{
   background:
     linear-gradient(rgba(2,4,8,.48),rgba(2,4,8,.62)),
-    url('assets/mholly-planet-bg-hd.jpg') center top/cover fixed no-repeat!important;
+    url('assets/mholly-planet-bg-hd.webp') center top/cover fixed no-repeat!important;
 }
 /* Hero: cleaner glass panel; no muddy black block and much stronger copy contrast. */
 .hero.hero-v2{
@@ -1050,13 +1050,13 @@ p,.card p,.price-card p,.project-card p,.portfolio-card p,.story-copy p,.service
 .card span,.price-card li,.project-card span,.portfolio-card span,.services-note,.story-point span{color:#aeb5c0!important}
 
 @media(max-width:980px){
-  body{background-image:linear-gradient(rgba(2,4,8,.52),rgba(2,4,8,.70)),url('assets/mholly-planet-bg-hd.jpg')!important;background-size:auto 1150px!important;background-position:54% top!important;background-repeat:repeat-y!important}
+  body{background-image:linear-gradient(rgba(2,4,8,.52),rgba(2,4,8,.70)),url('assets/mholly-planet-bg-hd.webp')!important;background-size:auto 1150px!important;background-position:54% top!important;background-repeat:repeat-y!important}
   .hero.hero-v2{background:linear-gradient(180deg,rgba(3,6,10,.30),rgba(3,6,10,.68) 42%,rgba(3,6,10,.92) 82%)!important}
 }
 
 /* ===== V9.3 — stronger neon, cleaner forms, crisp planet ===== */
 body{
-  background-image:linear-gradient(rgba(2,4,8,.34),rgba(2,4,8,.48)),url('assets/mholly-planet-clean-hd.jpg')!important;
+  background-image:linear-gradient(rgba(2,4,8,.34),rgba(2,4,8,.48)),url('assets/mholly-planet-clean-hd.webp')!important;
   background-size:cover!important;background-position:center top!important;background-attachment:fixed!important;
 }
 .home-service-grid>a,.card,.service-cards .card,.price-card,.project-card,.portfolio-card,.services-cta,.extras,.extra-card,.collab-intro,.contact-aside,.project-form,.about-mini-card,.truth-box,.about-hero,.team-value,.about-cta,.form-section,.portfolio-shop-section .project-card{
@@ -1078,11 +1078,11 @@ body{
 .field input:focus,.field select:focus,.field textarea:focus{border-color:#ff3044!important;box-shadow:0 0 0 2px rgba(255,48,68,.10),0 0 16px rgba(255,48,68,.16)!important}
 .contact-aside h2,.collab-intro h2{font-size:34px!important;line-height:1.08!important;color:#fff!important}
 .contact-aside p,.collab-intro p{font-size:15px!important;color:#d1d6de!important;line-height:1.65!important}
-@media(max-width:980px){body{background-image:linear-gradient(rgba(2,4,8,.44),rgba(2,4,8,.60)),url('assets/mholly-planet-clean-hd.jpg')!important;background-size:auto 1150px!important;background-position:52% top!important;background-repeat:repeat-y!important;background-attachment:scroll!important}.project-form{padding:18px!important}.form-section{padding:20px 16px!important}.form-section h3{font-size:23px!important}.home-service-grid>a h3,.home-service-grid>a strong{font-size:22px!important}}
+@media(max-width:980px){body{background-image:linear-gradient(rgba(2,4,8,.44),rgba(2,4,8,.60)),url('assets/mholly-planet-clean-hd.webp')!important;background-size:auto 1150px!important;background-position:52% top!important;background-repeat:repeat-y!important;background-attachment:scroll!important}.project-form{padding:18px!important}.form-section{padding:20px 16px!important}.form-section h3{font-size:23px!important}.home-service-grid>a h3,.home-service-grid>a strong{font-size:22px!important}}
 
 /* ===== V9.4 VISUAL REBUILD — 4K planet, readable content, unified red neon ===== */
 body{
-  background-image:linear-gradient(rgba(2,4,8,.34),rgba(2,3,6,.52)),url('assets/mholly-planet-4k.jpg')!important;
+  background-image:linear-gradient(rgba(2,4,8,.34),rgba(2,3,6,.52)),url('assets/mholly-planet-4k.webp')!important;
   background-size:cover!important;background-position:center top!important;background-repeat:no-repeat!important;background-attachment:fixed!important;
 }
 /* Make all major copy readable over the planet */
@@ -1115,7 +1115,7 @@ body{
 .home-contact::after{content:"";position:absolute;right:-60px;top:-90px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,35,55,.15),transparent 68%);pointer-events:none}.home-contact h2{font-size:clamp(34px,4vw,54px)!important;line-height:1.02!important;letter-spacing:-2px!important;color:#fff!important;margin:9px 0 12px!important}.home-contact p{color:#cbd1da!important;max-width:720px!important;line-height:1.7!important}.home-contact .btn{position:relative;z-index:2;box-shadow:0 0 22px rgba(255,30,50,.22)!important}
 /* Form text clarity everywhere */
 .form-section h3{color:#fff!important;text-shadow:0 2px 14px #000!important}.form-section>p,.field-note,.checkline{color:#c8ced8!important}.field label{color:#e5e8ee!important}.field input,.field select,.field textarea{color:#fff!important;background:rgba(5,8,13,.94)!important;border-color:#424b59!important}.field input::placeholder,.field textarea::placeholder{color:#8f98a6!important}
-@media(max-width:980px){body{background-image:linear-gradient(rgba(2,4,8,.42),rgba(2,3,6,.62)),url('assets/mholly-planet-4k.jpg')!important;background-size:auto 1250px!important;background-position:50% top!important;background-repeat:repeat-y!important;background-attachment:scroll!important}.about-copy{padding:22px!important}.about-copy p{font-size:15px!important}.home-contact{padding:25px 22px!important}.pricing-vivid .price-card{padding:25px 24px 24px 28px!important}}
+@media(max-width:980px){body{background-image:linear-gradient(rgba(2,4,8,.42),rgba(2,3,6,.62)),url('assets/mholly-planet-4k.webp')!important;background-size:auto 1250px!important;background-position:50% top!important;background-repeat:repeat-y!important;background-attachment:scroll!important}.about-copy{padding:22px!important}.about-copy p{font-size:15px!important}.home-contact{padding:25px 22px!important}.pricing-vivid .price-card{padding:25px 24px 24px 28px!important}}
 
 /* ===== V9.5 — story readability + completely rebuilt packages ===== */
 .story{position:relative;gap:46px!important;padding:44px!important;border:1px solid rgba(255,45,61,.78)!important;border-radius:24px!important;background:linear-gradient(115deg,rgba(4,7,12,.94),rgba(7,8,12,.86))!important;box-shadow:0 0 22px rgba(255,30,48,.18),0 28px 75px rgba(0,0,0,.48)!important;backdrop-filter:blur(10px)}
@@ -1428,3 +1428,11 @@ body.mh-language-switching::after{
 html.mh-translation-loading body::before,body.mh-language-switching::before,
 html.mh-translation-loading body::after,body.mh-language-switching::after{display:none!important;content:none!important}
 html.mh-translation-loading body,body.mh-language-switching{visibility:visible!important;opacity:1!important}
+
+/* ===== V11.8 HARD NO-FLASH FIRST PAINT ===== */
+html,body{visibility:visible!important;opacity:1!important}
+body>*{visibility:visible!important}
+.reveal,.reveal.visible{opacity:1!important;transform:none!important;transition-property:none!important;animation-name:none!important}
+@media(max-width:980px){
+  main,section,header,footer,.hero,.hero-copy,.hero-mark,.page,.site-header{opacity:1!important;visibility:visible!important;transform:none!important}
+}

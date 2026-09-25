@@ -1,12 +1,13 @@
 document.querySelectorAll('.menu-btn').forEach(btn=>btn.addEventListener('click',()=>document.querySelector('.site-header nav')?.classList.toggle('open')));
 
-const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.08});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+// V11.8: entrance reveal disabled to guarantee stable first paint on mobile.
+document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
 
 // Jemné červené častice v pozadí – bez externých knižníc.
 const emberLayer=document.querySelector('.embers');
 if(emberLayer){
-  for(let i=0;i<86;i++){
+  const emberCount=window.matchMedia('(max-width: 700px)').matches?14:34;
+  for(let i=0;i<emberCount;i++){
     const e=document.createElement('i'); e.className='ember';
     e.style.left=`${Math.random()*100}%`; e.style.top=`${Math.random()*115}%`;
     e.style.animationDuration=`${12+Math.random()*16}s`; e.style.animationDelay=`-${Math.random()*24}s`;

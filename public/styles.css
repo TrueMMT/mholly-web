@@ -1527,3 +1527,36 @@ body>*{visibility:visible!important}
   .hero-trust span{background:rgba(4,6,10,.96)!important}
   .story{background:linear-gradient(115deg,rgba(4,7,12,.98),rgba(7,8,12,.97))!important}
 }
+
+/* ===== V12.3 iOS + ANDROID MOBILE GPU SAFE MODE =====
+   Hard-disable backdrop compositing only on touch/mobile layouts.
+   Desktop remains unchanged. Layout/geometry intentionally untouched. */
+@media (max-width:980px), (hover:none) and (pointer:coarse){
+  html,body,body *,body *::before,body *::after{
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+  }
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{-webkit-overflow-scrolling:touch;overscroll-behavior-y:auto}
+  .site-header,.site-header nav,.services-menu,.modal,.success-overlay,.modal-card,.success-card,
+  .hero,.hero.hero-v2,.hero-badge,.hero-trust span,.story,.page-head,.home-services-head,
+  .card,.price-card,.project-card,.portfolio-card{
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+    background-clip:padding-box;
+  }
+  /* Solid/semi-solid replacements keep the same visual hierarchy without sampling pixels behind. */
+  .site-header{background:#090b10!important}
+  .site-header nav.open{background:#090b10!important}
+  .services-menu{background:#0c0c0f!important}
+  .modal,.success-overlay{background:rgba(0,0,0,.94)!important}
+  .modal-card,.success-card{background:#0b0b0e!important}
+  .hero-badge{background:#0b0b0e!important}
+  .hero-trust span{background:#080a0e!important}
+  .story{background:linear-gradient(115deg,#05080d,#08090d)!important}
+
+  /* Avoid common iOS/Android repaint triggers while scrolling. */
+  .ambient,.embers,.bg-grid,.ember{display:none!important;animation:none!important}
+  .hero-mark img,.logo-orbit{animation:none!important;will-change:auto!important}
+  body,main,section,.page,.hero,.site-header,.site-footer{will-change:auto!important}
+}

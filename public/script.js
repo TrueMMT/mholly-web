@@ -6,7 +6,7 @@ document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'));
 // Jemné červené častice v pozadí – bez externých knižníc.
 const emberLayer=document.querySelector('.embers');
 if(emberLayer){
-  const emberCount=window.matchMedia('(max-width: 700px)').matches?14:34;
+  const emberCount=window.matchMedia('(max-width: 980px)').matches?0:28;
   for(let i=0;i<emberCount;i++){
     const e=document.createElement('i'); e.className='ember';
     e.style.left=`${Math.random()*100}%`; e.style.top=`${Math.random()*115}%`;

@@ -1560,3 +1560,24 @@ body>*{visibility:visible!important}
   .hero-mark img,.logo-orbit{animation:none!important;will-change:auto!important}
   body,main,section,.page,.hero,.site-header,.site-footer{will-change:auto!important}
 }
+
+
+/* ===== V12.4 FINAL MOBILE REFLOW FIX =====
+   Services popover needs zero JS geometry reads on phones/tablets.
+   getBoundingClientRect() is desktop-open-only; there is no scroll handler. */
+@media (max-width:980px), (hover:none) and (pointer:coarse){
+  .mh-services-popover{
+    position:fixed!important;
+    left:14px!important;
+    right:14px!important;
+    top:82px!important;
+    width:auto!important;
+    max-width:none!important;
+    margin:0!important;
+    transform:none!important;
+    contain:layout paint!important;
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+    background:#0b0b0e!important;
+  }
+}

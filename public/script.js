@@ -66,7 +66,16 @@ if(form && modal && confirmBtn){
   const pop = document.getElementById('mh-services-popover');
   if (!trigger || !pop) return;
 
-  const position = () => {
+  // Performance: never measure layout during scroll. On mobile the popover is
+  // positioned entirely by CSS; desktop measures once, only when opened.
+  const isMobile = () => window.matchMedia('(max-width: 980px), (hover: none) and (pointer: coarse)').matches;
+  const positionDesktopOnce = () => {
+    if (isMobile()) {
+      pop.style.removeProperty('width');
+      pop.style.removeProperty('left');
+      pop.style.removeProperty('top');
+      return;
+    }
     const r = trigger.getBoundingClientRect();
     const w = Math.min(330, window.innerWidth - 24);
     let left = r.left + r.width / 2 - w / 2;
@@ -80,7 +89,7 @@ if(form && modal && confirmBtn){
     trigger.setAttribute('aria-expanded','false');
   };
   const open = () => {
-    position();
+    positionDesktopOnce();
     pop.hidden = false;
     trigger.setAttribute('aria-expanded','true');
   };
@@ -106,8 +115,10 @@ if(form && modal && confirmBtn){
     if (!pop.hidden && !pop.contains(e.target) && !trigger.contains(e.target)) close();
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-  window.addEventListener('resize', () => { if (!pop.hidden) position(); });
-  window.addEventListener('scroll', () => { if (!pop.hidden) position(); }, {passive:true});
+  // Close on viewport changes instead of continuously reading/writing layout.
+  // No scroll listener is registered here on purpose.
+  window.addEventListener('resize', () => { if (!pop.hidden) close(); }, {passive:true});
+  window.addEventListener('orientationchange', () => { if (!pop.hidden) close(); }, {passive:true});
 })();
 
 // Zusammenarbeit: separate Anfrage mit derselben E-Mail-Logik wie Projektanfragen.
